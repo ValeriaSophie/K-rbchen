@@ -132,6 +132,45 @@ export interface QuickCallDto {
   acknowledgedAt: string | null;
 }
 
+// ---- Calendar / appointments ----------------------------------------------
+
+export type Recurrence = 'none' | 'daily' | 'weekly' | 'monthly';
+
+export interface CalendarAttendeeDto {
+  userId: string;
+  displayName: string;
+}
+
+export interface CalendarEventDto {
+  id: string;
+  title: string;
+  note: string | null;
+  startAt: string; // ISO — anchor start of the series
+  endAt: string | null;
+  allDay: boolean;
+  forEveryone: boolean;
+  recurrence: Recurrence;
+  recurrenceEnd: string | null;
+  reminderMinutes: number | null;
+  createdBy: string;
+  attendees: CalendarAttendeeDto[]; // empty when forEveryone
+  occurrenceStart: string; // concrete instance (differs from startAt when recurring)
+  occurrenceEnd: string | null;
+}
+
+export interface CalendarEventInput {
+  title: string;
+  note?: string | null;
+  startAt: string;
+  endAt?: string | null;
+  allDay?: boolean;
+  forEveryone?: boolean;
+  attendeeUserIds?: string[]; // used when !forEveryone
+  recurrence?: Recurrence;
+  recurrenceEnd?: string | null;
+  reminderMinutes?: number | null;
+}
+
 // ---- Live events (SSE) -----------------------------------------------------
 
 export type LiveEventType =
@@ -146,6 +185,8 @@ export type LiveEventType =
   | 'stars.updated'
   | 'quickcall.received'
   | 'quickcall.acknowledged'
+  | 'calendar.updated'
+  | 'calendar.reminder'
   | 'koerbchen.updated';
 
 export interface LiveEvent<T = unknown> {

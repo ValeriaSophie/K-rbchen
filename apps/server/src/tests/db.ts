@@ -2,6 +2,8 @@ import { prisma } from '../lib/prisma';
 
 // Truncate all tables in FK-safe order (children first). Call in beforeEach.
 export async function resetDb() {
+  await prisma.calendarAttendee.deleteMany();
+  await prisma.calendarEvent.deleteMany();
   await prisma.starTransaction.deleteMany();
   await prisma.drinkLog.deleteMany();
   await prisma.changeLog.deleteMany();
