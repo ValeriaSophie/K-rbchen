@@ -13,6 +13,8 @@ import type {
   QuickCallPresetDto,
   QuickCallPresetInput,
   QuickCallDto,
+  CalendarEventDto,
+  CalendarEventInput,
 } from '@koerbchen/shared';
 
 export class ApiError extends Error {
@@ -126,4 +128,22 @@ export const api = {
   listQuickCalls: (id: string) => request<QuickCallDto[]>(`/api/koerbchen/${id}/quickcall`),
   ackQuickCall: (id: string, callId: string) =>
     request<QuickCallDto>(`/api/koerbchen/${id}/quickcall/${callId}/ack`, { method: 'POST' }),
+
+  // Calendar
+  getCalendar: (id: string, from?: string, to?: string) => {
+    const params = new URLSearchParams();
+    if (from) params.set('from', from);
+    if (to) params.set('to', to);
+    const q = params.toString();
+    return request<CalendarEventDto[]>(`/api/koerbchen/${id}/calendar${q ? `?${q}` : ''}`);
+  },
+  createEvent: (id: string, input: CalendarEventInput) =>
+    request<CalendarEventDto>(`/api/koerbchen/${id}/calendar`, { method: 'POST', body: body(input) }),
+  updateEvent: (id: string, eventId: string, input: CalendarEventInput) =>
+    request<CalendarEventDto>(`/api/koerbchen/${id}/calendar/${eventId}`, {
+      method: 'PATCH',
+      body: body(input),
+    }),
+  deleteEvent: (id: string, eventId: string) =>
+    request<{ ok: boolean }>(`/api/koerbchen/${id}/calendar/${eventId}`, { method: 'DELETE' }),
 };

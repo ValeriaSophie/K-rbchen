@@ -47,6 +47,14 @@ export function useLiveEvents(koerbchenId: string | null) {
         case 'quickcall.acknowledged':
           invalidate(['quickcalls', koerbchenId]);
           break;
+        case 'calendar.updated':
+          invalidate(['calendar', koerbchenId]);
+          break;
+        case 'calendar.reminder':
+          invalidate(['calendar', koerbchenId]);
+          // surface a transient toast, decoupled from this hook
+          window.dispatchEvent(new CustomEvent('koerbchen:reminder', { detail: event }));
+          break;
         case 'koerbchen.updated':
           invalidate(['koerbchen', koerbchenId]);
           break;

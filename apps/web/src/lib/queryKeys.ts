@@ -10,4 +10,5 @@ export const qk = {
   redemptions: (id: string) => ['redemptions', id] as const,
   presets: (id: string) => ['presets', id] as const,
   quickcalls: (id: string) => ['quickcalls', id] as const,
+  calendar: (id: string, from: string, to: string) => ['calendar', id, from, to] as const,
 };

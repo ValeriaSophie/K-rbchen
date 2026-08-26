@@ -14,6 +14,8 @@ import { CaregiverOverview } from './features/drink/CaregiverOverview';
 import { DiaperCard, ChangeCard } from './features/diaper/DiaperChange';
 import { StarsCard, RewardsAdmin } from './features/rewards/Rewards';
 import { QuickCallPanel } from './features/quickcall/QuickCall';
+import { CalendarPanel } from './features/calendar/CalendarPanel';
+import { ReminderToast } from './features/calendar/ReminderToast';
 
 export function App() {
   const me = useMe();
@@ -42,6 +44,7 @@ function Dashboard({ me }: { me: MeDto }) {
 
   return (
     <main className="min-h-dvh bg-gradient-to-b from-rose-100 to-amber-50">
+      <ReminderToast />
       <TopBar
         title={koerbchen.data?.name ?? 'Körbchen'}
         role={role}
@@ -77,6 +80,10 @@ function Dashboard({ me }: { me: MeDto }) {
               </button>
             )}
           </>
+        )}
+
+        {koerbchen.data && (
+          <CalendarPanel koerbchen={koerbchen.data} role={role} currentUserId={me.user.id} />
         )}
       </div>
     </main>
