@@ -6,6 +6,9 @@ import { authPlugin } from './plugins/auth';
 import { authRoutes } from './routes/auth';
 import { koerbchenRoutes } from './routes/koerbchen';
 import { drinkRoutes } from './routes/drink';
+import { diaperRoutes } from './routes/diaper';
+import { rewardRoutes } from './routes/rewards';
+import { quickCallRoutes } from './routes/quickcall';
 import { liveRoutes } from './routes/live';
 
 export async function buildApp(): Promise<FastifyInstance> {
@@ -25,6 +28,9 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(authRoutes);
   await app.register(koerbchenRoutes);
   await app.register(drinkRoutes);
+  await app.register(diaperRoutes);
+  await app.register(rewardRoutes);
+  await app.register(quickCallRoutes);
   await app.register(liveRoutes);
 
   return app;
