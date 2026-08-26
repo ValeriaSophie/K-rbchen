@@ -32,13 +32,14 @@ export function SettingsPage({ koerbchen, onDone }: { koerbchen: KoerbchenDto; o
     mutation.error instanceof ApiError ? mutation.error.message : mutation.error ? 'Fehler' : null;
 
   return (
-    <div className="rounded-3xl bg-white shadow-sm ring-1 ring-rose-100 p-5">
+    <div className="panel p-5">
+      <p className="eyebrow mb-2">// KONFIG</p>
       <h2 className="text-lg font-semibold text-rose-800">Einstellungen</h2>
       <form onSubmit={onSubmit} className="mt-4 space-y-4">
         <label className="block">
           <span className="mb-1 block text-sm font-medium text-rose-900/80">Name</span>
           <input
-            className="w-full rounded-xl border border-rose-200 bg-white px-3 py-2 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200"
+            className="field"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -54,7 +55,7 @@ export function SettingsPage({ koerbchen, onDone }: { koerbchen: KoerbchenDto; o
             min={100}
             max={10000}
             step={50}
-            className="w-full rounded-xl border border-rose-200 bg-white px-3 py-2 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200"
+            className="field"
             value={goal}
             onChange={(e) => setGoal(Number(e.target.value))}
             required
@@ -67,7 +68,7 @@ export function SettingsPage({ koerbchen, onDone }: { koerbchen: KoerbchenDto; o
           <button
             type="submit"
             disabled={mutation.isPending}
-            className="flex-1 rounded-full bg-rose-500 py-2.5 font-semibold text-white shadow transition hover:bg-rose-600 disabled:opacity-60"
+            className="btn-neon flex-1 rounded-full bg-rose-500 py-2.5 font-semibold text-[#0a0713] transition hover:bg-rose-600 disabled:opacity-60"
           >
             {mutation.isPending ? '…' : 'Speichern'}
           </button>

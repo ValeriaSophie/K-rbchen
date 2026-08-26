@@ -25,7 +25,7 @@ export function DiaperCard({ koerbchenId }: { koerbchenId: string }) {
   const d = diaper.data;
 
   return (
-    <section className="rounded-3xl bg-white shadow-sm ring-1 ring-rose-100 p-6">
+    <section className="panel p-6">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-rose-800">Windeln 🧷</h2>
         {d && (
@@ -71,7 +71,7 @@ export function ChangeCard({ koerbchenId }: { koerbchenId: string }) {
   const c = change.data;
 
   return (
-    <section className="rounded-3xl bg-white shadow-sm ring-1 ring-rose-100 p-6">
+    <section className="panel p-6">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-rose-800">Wickeln</h2>
         {c?.isDue && (
@@ -86,7 +86,7 @@ export function ChangeCard({ koerbchenId }: { koerbchenId: string }) {
       <button
         onClick={() => log.mutate()}
         disabled={log.isPending}
-        className="mt-4 w-full rounded-full bg-rose-500 py-3 font-semibold text-white shadow transition hover:bg-rose-600 disabled:opacity-60"
+        className="btn-neon mt-4 w-full rounded-full bg-rose-500 py-3 font-semibold text-[#0a0713] transition hover:bg-rose-600 disabled:opacity-60"
       >
         Frisch gewickelt ✓
       </button>

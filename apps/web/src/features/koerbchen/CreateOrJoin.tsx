@@ -33,15 +33,15 @@ export function CreateOrJoin() {
     mutation.error instanceof ApiError ? mutation.error.message : mutation.error ? 'Fehler' : null;
 
   return (
-    <main className="min-h-dvh bg-gradient-to-b from-rose-100 to-amber-50 p-6">
+    <main className="min-h-dvh p-6">
       <div className="mx-auto max-w-sm pt-8">
         <h1 className="text-center text-2xl font-bold text-rose-700">Willkommen! 🧺</h1>
         <p className="mt-1 text-center text-sm text-rose-900/60">
           Erstelle ein Körbchen oder tritt einem bei.
         </p>
 
-        <div className="mt-6 rounded-3xl bg-white/80 backdrop-blur shadow-lg ring-1 ring-rose-200 p-6">
-          <div className="grid grid-cols-2 gap-1 rounded-full bg-rose-100 p-1 mb-5 text-sm font-medium">
+        <div className="panel mt-6 p-6">
+          <div className="seg grid grid-cols-2 gap-1 rounded-full p-1 mb-5 text-sm font-medium">
             <TabButton active={tab === 'create'} onClick={() => setTab('create')}>
               Erstellen
             </TabButton>
@@ -57,7 +57,7 @@ export function CreateOrJoin() {
                   Name des Körbchens
                 </span>
                 <input
-                  className="w-full rounded-xl border border-rose-200 bg-white px-3 py-2 outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200"
+                  className="field"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="z.B. Unser Nest"
@@ -68,7 +68,7 @@ export function CreateOrJoin() {
               <label className="block">
                 <span className="mb-1 block text-sm font-medium text-rose-900/80">Invite-Code</span>
                 <input
-                  className="w-full rounded-xl border border-rose-200 bg-white px-3 py-2 uppercase tracking-widest outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200"
+                  className="field uppercase tracking-widest"
                   value={inviteCode}
                   onChange={(e) => setInviteCode(e.target.value.toUpperCase())}
                   placeholder="ABC123"
@@ -98,7 +98,7 @@ export function CreateOrJoin() {
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="w-full rounded-full bg-rose-500 py-3 font-semibold text-white shadow-md transition hover:bg-rose-600 disabled:opacity-60"
+              className="btn-neon w-full rounded-full bg-rose-500 py-3 font-semibold text-[#0a0713] transition hover:bg-rose-600 disabled:opacity-60"
             >
               {mutation.isPending ? '…' : tab === 'create' ? 'Körbchen erstellen' : 'Beitreten'}
             </button>
@@ -115,7 +115,7 @@ function TabButton(props: { active: boolean; onClick: () => void; children: Reac
       type="button"
       onClick={props.onClick}
       className={`rounded-full py-2 transition ${
-        props.active ? 'bg-white text-rose-700 shadow' : 'text-rose-500'
+        props.active ? 'seg-on' : 'seg-off'
       }`}
     >
       {props.children}
@@ -136,7 +136,7 @@ function RolePick(props: {
       className={`flex flex-col items-center gap-1 rounded-2xl border-2 py-3 transition ${
         props.active
           ? 'border-rose-400 bg-rose-50 text-rose-700'
-          : 'border-rose-200 bg-white text-rose-500'
+          : 'border-rose-200 bg-transparent text-rose-500'
       }`}
     >
       <span className="text-2xl" aria-hidden>

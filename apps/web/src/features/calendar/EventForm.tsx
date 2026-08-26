@@ -90,11 +90,11 @@ export function EventForm({
 
   const error =
     mutation.error instanceof ApiError ? mutation.error.message : mutation.error ? 'Fehler' : null;
-  const inputCls =
-    'w-full rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200';
+  const inputCls = 'field';
 
   return (
-    <form onSubmit={onSubmit} className="rounded-3xl bg-white shadow-sm ring-1 ring-rose-100 p-5 space-y-3">
+    <form onSubmit={onSubmit} className="panel p-5 space-y-3">
+      <p className="eyebrow">// {existing ? 'TERMIN · EDIT' : 'TERMIN · NEU'}</p>
       <h3 className="font-semibold text-rose-800">{existing ? 'Termin bearbeiten' : 'Neuer Termin'}</h3>
 
       <input
@@ -164,7 +164,7 @@ export function EventForm({
                 onClick={() => toggleMember(m.userId)}
                 className={`rounded-full px-3 py-1.5 text-sm ${
                   selected.includes(m.userId)
-                    ? 'bg-rose-500 text-white'
+                    ? 'bg-rose-500 text-[#0a0713]'
                     : 'bg-rose-100 text-rose-700'
                 }`}
               >
@@ -227,7 +227,7 @@ export function EventForm({
         <button
           type="submit"
           disabled={mutation.isPending}
-          className="flex-1 rounded-full bg-rose-500 py-2.5 font-semibold text-white shadow transition hover:bg-rose-600 disabled:opacity-60"
+          className="btn-neon flex-1 rounded-full bg-rose-500 py-2.5 font-semibold text-[#0a0713] transition hover:bg-rose-600 disabled:opacity-60"
         >
           {mutation.isPending ? '…' : 'Speichern'}
         </button>

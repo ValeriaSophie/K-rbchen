@@ -22,9 +22,13 @@ export function App() {
 
   if (me.isLoading) {
     return (
-      <main className="min-h-dvh flex items-center justify-center bg-rose-50">
-        <span className="text-4xl" aria-label="Lädt">
-          🧺
+      <main className="flex min-h-dvh items-center justify-center">
+        <span
+          className="wordmark text-2xl text-rose-500"
+          style={{ animation: 'kb-glitch 2.2s infinite' }}
+          aria-label="Lädt"
+        >
+          KÖRBCHEN
         </span>
       </main>
     );
@@ -43,7 +47,7 @@ function Dashboard({ me }: { me: MeDto }) {
   const [showSettings, setShowSettings] = useState(false);
 
   return (
-    <main className="min-h-dvh bg-gradient-to-b from-rose-100 to-amber-50">
+    <main className="min-h-dvh">
       <ReminderToast />
       <TopBar
         title={koerbchen.data?.name ?? 'Körbchen'}
@@ -74,9 +78,9 @@ function Dashboard({ me }: { me: MeDto }) {
             ) : (
               <button
                 onClick={() => setShowSettings(true)}
-                className="w-full rounded-full bg-white py-3 font-semibold text-rose-700 shadow-sm ring-1 ring-rose-100 transition hover:bg-rose-50"
+                className="panel w-full py-3 text-center font-semibold uppercase tracking-wider text-rose-700 transition hover:text-rose-500"
               >
-                ⚙️ Trinkziel & Einstellungen
+                ⚙ Trinkziel & Einstellungen
               </button>
             )}
           </>
@@ -101,18 +105,19 @@ function TopBar({ title, role, displayName }: { title: string; role: string; dis
   });
 
   return (
-    <header className="sticky top-0 z-10 flex items-center justify-between bg-white/70 px-4 py-3 backdrop-blur ring-1 ring-rose-100">
-      <div>
-        <h1 className="text-lg font-bold text-rose-700">{title}</h1>
-        <p className="text-xs text-rose-900/50">
-          {displayName} · {role === 'pupp' ? '🐾 Pupp' : '🫶 Caregiver'}
+    <header className="sticky top-0 z-20 flex items-center justify-between border-b border-rose-500/25 bg-[#0b0716]/85 px-4 py-3 backdrop-blur">
+      <div className="min-w-0">
+        <h1 className="wordmark truncate text-lg text-rose-500">{title}</h1>
+        <p className="eyebrow mt-0.5 truncate">
+          {displayName} <span className="text-[color:var(--muted)]">·</span>{' '}
+          {role === 'pupp' ? 'UNIT // PUPP' : 'OP // CAREGIVER'}
         </p>
       </div>
       <button
         onClick={() => logout.mutate()}
-        className="rounded-full px-3 py-1.5 text-sm font-medium text-rose-600 hover:bg-rose-50"
+        className="rounded-full border border-rose-500/40 px-3 py-1.5 font-mono text-xs uppercase tracking-wider text-rose-700 transition hover:bg-rose-500/10"
       >
-        Abmelden
+        Trennen
       </button>
     </header>
   );
@@ -120,10 +125,15 @@ function TopBar({ title, role, displayName }: { title: string; role: string; dis
 
 function InviteCard({ code }: { code: string }) {
   return (
-    <div className="rounded-3xl bg-rose-500 p-5 text-center text-white shadow-sm">
-      <p className="text-sm text-white/80">Invite-Code</p>
-      <p className="mt-1 text-3xl font-bold tracking-[0.3em]">{code}</p>
-      <p className="mt-1 text-xs text-white/70">Teile ihn mit deinem Pupp zum Beitreten.</p>
+    <div className="panel p-5 text-center">
+      <p className="eyebrow">// INVITE-CODE</p>
+      <p
+        className="mt-2 font-mono text-4xl font-bold tracking-[0.35em] text-[color:var(--cyan)]"
+        style={{ textShadow: '0 0 18px rgba(34,232,255,0.55)' }}
+      >
+        {code}
+      </p>
+      <p className="mt-2 text-xs text-rose-900/60">Teile ihn mit deinem Pupp zum Koppeln.</p>
     </div>
   );
 }

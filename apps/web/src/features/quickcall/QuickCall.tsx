@@ -49,7 +49,7 @@ export function QuickCallPanel({
   };
 
   return (
-    <section className="rounded-3xl bg-white shadow-sm ring-1 ring-rose-100 p-6">
+    <section className="panel p-6">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-rose-800">Kurzruf 📣</h2>
         {role === 'caregiver' && (
@@ -88,12 +88,12 @@ export function QuickCallPanel({
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="eigene Nachricht"
-          className="flex-1 rounded-2xl border border-rose-200 bg-white px-3 py-2 text-sm outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200"
+          className="field flex-1"
         />
         <button
           type="submit"
           disabled={send.isPending}
-          className="rounded-2xl bg-rose-500 px-4 text-sm font-semibold text-white hover:bg-rose-600 disabled:opacity-60"
+          className="rounded-2xl bg-rose-500 px-4 text-sm font-semibold text-[#0a0713] hover:bg-rose-600 disabled:opacity-60"
         >
           Senden
         </button>
@@ -119,7 +119,7 @@ export function QuickCallPanel({
               {!c.acknowledgedAt && !mine && (
                 <button
                   onClick={() => ack.mutate(c.id)}
-                  className="rounded-full bg-rose-500 px-3 py-1 text-xs font-semibold text-white hover:bg-rose-600"
+                  className="rounded-full bg-rose-500 px-3 py-1 text-xs font-semibold text-[#0a0713] hover:bg-rose-600"
                 >
                   ✓
                 </button>
@@ -177,24 +177,24 @@ function PresetForm({ koerbchenId }: { koerbchenId: string }) {
         value={emoji}
         onChange={(e) => setEmoji(e.target.value)}
         placeholder="🙂"
-        className="w-14 rounded-xl border border-rose-200 bg-white px-2 py-2 text-center text-sm outline-none focus:border-rose-400"
+        className="field w-14 text-center"
       />
       <input
         value={label}
         onChange={(e) => setLabel(e.target.value)}
         placeholder="Label"
-        className="w-24 rounded-xl border border-rose-200 bg-white px-2 py-2 text-sm outline-none focus:border-rose-400"
+        className="field w-24"
       />
       <input
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         placeholder="Nachricht"
-        className="flex-1 rounded-xl border border-rose-200 bg-white px-2 py-2 text-sm outline-none focus:border-rose-400"
+        className="field flex-1"
       />
       <button
         type="submit"
         disabled={create.isPending}
-        className="rounded-xl bg-rose-500 px-3 text-sm font-semibold text-white hover:bg-rose-600 disabled:opacity-60"
+        className="rounded-xl bg-rose-500 px-3 text-sm font-semibold text-[#0a0713] hover:bg-rose-600 disabled:opacity-60"
       >
         +
       </button>

@@ -39,7 +39,7 @@ export function StarsCard({ koerbchenId, userId }: { koerbchenId: string; userId
   });
 
   return (
-    <section className="rounded-3xl bg-white shadow-sm ring-1 ring-rose-100 p-6">
+    <section className="panel p-6">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-rose-800">Meine Sterne</h2>
         <span className="text-2xl font-bold text-amber-500">⭐ {balance}</span>
@@ -60,7 +60,7 @@ export function StarsCard({ koerbchenId, userId }: { koerbchenId: string; userId
               <button
                 onClick={() => redeem.mutate(r.id)}
                 disabled={balance < r.costStars || redeem.isPending}
-                className="rounded-full bg-rose-500 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-rose-600 disabled:opacity-40"
+                className="rounded-full bg-rose-500 px-3 py-1.5 text-sm font-semibold text-[#0a0713] transition hover:bg-rose-600 disabled:opacity-40"
               >
                 ⭐ {r.costStars}
               </button>
@@ -136,7 +136,7 @@ export function RewardsAdmin({ koerbchen }: { koerbchen: KoerbchenDto }) {
   };
 
   return (
-    <section className="rounded-3xl bg-white shadow-sm ring-1 ring-rose-100 p-6">
+    <section className="panel p-6">
       <h2 className="text-lg font-semibold text-rose-800">Belohnungen & Sterne</h2>
 
       {pending.length > 0 && (
@@ -151,7 +151,7 @@ export function RewardsAdmin({ koerbchen }: { koerbchen: KoerbchenDto }) {
                 <span className="flex gap-1">
                   <button
                     onClick={() => decide.mutate({ id: r.id, approve: true })}
-                    className="rounded-full bg-green-500 px-3 py-1 text-xs font-semibold text-white hover:bg-green-600"
+                    className="rounded-full bg-green-500 px-3 py-1 text-xs font-semibold text-[#0a0713] hover:bg-green-600"
                   >
                     OK
                   </button>
@@ -197,7 +197,7 @@ export function RewardsAdmin({ koerbchen }: { koerbchen: KoerbchenDto }) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Neue Belohnung"
-          className="flex-1 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200"
+          className="field flex-1"
         />
         <input
           type="number"
@@ -205,12 +205,12 @@ export function RewardsAdmin({ koerbchen }: { koerbchen: KoerbchenDto }) {
           max={1000}
           value={cost}
           onChange={(e) => setCost(Number(e.target.value))}
-          className="w-20 rounded-xl border border-rose-200 bg-white px-3 py-2 text-sm outline-none focus:border-rose-400 focus:ring-2 focus:ring-rose-200"
+          className="field w-20"
         />
         <button
           type="submit"
           disabled={create.isPending}
-          className="rounded-xl bg-rose-500 px-4 text-sm font-semibold text-white hover:bg-rose-600 disabled:opacity-60"
+          className="rounded-xl bg-rose-500 px-4 text-sm font-semibold text-[#0a0713] hover:bg-rose-600 disabled:opacity-60"
         >
           +
         </button>

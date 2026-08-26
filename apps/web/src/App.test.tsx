@@ -29,7 +29,7 @@ describe('App', () => {
         <App />
       </Providers>,
     );
-    expect(await screen.findByRole('heading', { name: 'Körbchen' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'KÖRBCHEN' })).toBeInTheDocument();
     expect(screen.getByText('E-Mail')).toBeInTheDocument();
   });
 

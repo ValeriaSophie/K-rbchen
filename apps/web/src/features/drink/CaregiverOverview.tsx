@@ -6,7 +6,8 @@ export function CaregiverOverview({ koerbchen }: { koerbchen: KoerbchenDto }) {
   const pupps = koerbchen.members.filter((m) => m.role === 'pupp');
 
   return (
-    <section className="rounded-3xl bg-white shadow-sm ring-1 ring-rose-100 p-6">
+    <section className="panel p-6">
+      <p className="eyebrow mb-2">// TRINKEN · ÜBERSICHT</p>
       <h2 className="text-lg font-semibold text-rose-800">Trinken heute</h2>
       {pupps.length === 0 ? (
         <p className="mt-3 text-sm text-rose-900/50">Noch kein Pupp im Körbchen.</p>

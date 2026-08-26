@@ -86,27 +86,27 @@ export function CalendarPanel({
   };
 
   return (
-    <section className="rounded-3xl bg-white shadow-sm ring-1 ring-rose-100 p-5">
+    <section className="panel p-5">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-rose-800">Kalender 📅</h2>
         <div className="flex items-center gap-2">
-          <div className="flex rounded-full bg-rose-100 p-0.5 text-xs font-medium">
+          <div className="seg flex rounded-full p-0.5 text-xs font-medium">
             <button
               onClick={() => setView('agenda')}
-              className={`rounded-full px-3 py-1 ${view === 'agenda' ? 'bg-white text-rose-700 shadow' : 'text-rose-500'}`}
+              className={`rounded-full px-3 py-1 ${view === 'agenda' ? 'seg-on' : 'text-rose-500'}`}
             >
               Agenda
             </button>
             <button
               onClick={() => setView('month')}
-              className={`rounded-full px-3 py-1 ${view === 'month' ? 'bg-white text-rose-700 shadow' : 'text-rose-500'}`}
+              className={`rounded-full px-3 py-1 ${view === 'month' ? 'seg-on' : 'text-rose-500'}`}
             >
               Monat
             </button>
           </div>
           <button
             onClick={() => openNew(selectedDay ?? undefined)}
-            className="rounded-full bg-rose-500 px-3 py-1.5 text-sm font-semibold text-white hover:bg-rose-600"
+            className="btn-neon rounded-full bg-rose-500 px-3 py-1.5 text-sm font-semibold text-[#0a0713] hover:bg-rose-600"
           >
             + Termin
           </button>

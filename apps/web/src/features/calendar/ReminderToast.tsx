@@ -27,7 +27,10 @@ export function ReminderToast() {
 
   if (!message) return null;
   return (
-    <div className="fixed inset-x-0 top-3 z-50 mx-auto w-fit rounded-full bg-rose-600 px-4 py-2 text-sm font-medium text-white shadow-lg">
+    <div
+      className="fixed inset-x-0 top-4 z-[70] mx-auto w-fit rounded-full border border-[color:var(--cyan)]/50 bg-[#0b0716]/90 px-4 py-2 font-mono text-sm text-rose-500 backdrop-blur"
+      style={{ boxShadow: '0 0 26px -4px rgba(255,46,154,0.7)' }}
+    >
       {message}
     </div>
   );
