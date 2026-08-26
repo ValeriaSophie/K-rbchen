@@ -1,0 +1,178 @@
+// Körbchen data model.
+// Dev uses SQLite (zero-config). To move to PostgreSQL, change the datasource
+// provider to "postgresql" and point DATABASE_URL at your Postgres instance.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  displayName  String
+  createdAt    DateTime @default(now())
+
+  memberships Membership[]
+  sessions    Session[]
+  drinkLogs   DrinkLog[]
+  changeLogs  ChangeLog[]
+  starTx      StarTransaction[]
+  redemptions RewardRedemption[]
+  quickCalls  QuickCall[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Koerbchen {
+  id                    String    @id @default(cuid())
+  name                  String
+  inviteCode            String    @unique
+  drinkGoalMl           Int       @default(1500)
+  changeIntervalMinutes Int       @default(180)
+  diaperCount           Int       @default(0)
+  diaperLowThreshold    Int       @default(5)
+  lastChangeAt          DateTime?
+  createdAt             DateTime  @default(now())
+
+  memberships  Membership[]
+  drinkLogs    DrinkLog[]
+  changeLogs   ChangeLog[]
+  rewards      Reward[]
+  redemptions  RewardRedemption[]
+  starTx       StarTransaction[]
+  quickPresets QuickCallPreset[]
+  quickCalls   QuickCall[]
+}
+
+model Membership {
+  id          String   @id @default(cuid())
+  userId      String
+  koerbchenId String
+  role        String // 'caregiver' | 'pupp'
+  createdAt   DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  koerbchen Koerbchen @relation(fields: [koerbchenId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, koerbchenId])
+  @@index([koerbchenId])
+}
+
+model DrinkLog {
+  id          String   @id @default(cuid())
+  koerbchenId String
+  userId      String
+  amountMl    Int
+  createdAt   DateTime @default(now())
+
+  koerbchen Koerbchen @relation(fields: [koerbchenId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([koerbchenId, createdAt])
+}
+
+model ChangeLog {
+  id          String   @id @default(cuid())
+  koerbchenId String
+  userId      String
+  note        String?
+  createdAt   DateTime @default(now())
+
+  koerbchen Koerbchen @relation(fields: [koerbchenId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([koerbchenId, createdAt])
+}
+
+model Reward {
+  id          String   @id @default(cuid())
+  koerbchenId String
+  title       String
+  description String?
+  costStars   Int
+  active      Boolean  @default(true)
+  createdBy   String
+  createdAt   DateTime @default(now())
+
+  koerbchen   Koerbchen          @relation(fields: [koerbchenId], references: [id], onDelete: Cascade)
+  redemptions RewardRedemption[]
+
+  @@index([koerbchenId])
+}
+
+model RewardRedemption {
+  id          String    @id @default(cuid())
+  rewardId    String
+  koerbchenId String
+  puppUserId  String
+  status      String // 'requested' | 'approved' | 'denied'
+  createdAt   DateTime  @default(now())
+  decidedAt   DateTime?
+
+  reward    Reward    @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  koerbchen Koerbchen @relation(fields: [koerbchenId], references: [id], onDelete: Cascade)
+  pupp      User      @relation(fields: [puppUserId], references: [id], onDelete: Cascade)
+
+  @@index([koerbchenId])
+}
+
+model StarTransaction {
+  id          String   @id @default(cuid())
+  koerbchenId String
+  userId      String // the pupp who owns these stars
+  delta       Int
+  reason      String // 'drink_goal' | 'manual' | 'redemption'
+  refId       String?
+  createdAt   DateTime @default(now())
+
+  koerbchen Koerbchen @relation(fields: [koerbchenId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([koerbchenId, userId])
+}
+
+model QuickCallPreset {
+  id          String @id @default(cuid())
+  koerbchenId String
+  label       String
+  message     String
+  emoji       String?
+  sortOrder   Int    @default(0)
+
+  koerbchen Koerbchen @relation(fields: [koerbchenId], references: [id], onDelete: Cascade)
+
+  @@index([koerbchenId])
+}
+
+model QuickCall {
+  id             String    @id @default(cuid())
+  koerbchenId    String
+  fromUserId     String
+  presetId       String?
+  text           String
+  emoji          String?
+  createdAt      DateTime  @default(now())
+  acknowledgedAt DateTime?
+  acknowledgedBy String?
+
+  koerbchen Koerbchen @relation(fields: [koerbchenId], references: [id], onDelete: Cascade)
+  from      User      @relation(fields: [fromUserId], references: [id], onDelete: Cascade)
+
+  @@index([koerbchenId, createdAt])
+}

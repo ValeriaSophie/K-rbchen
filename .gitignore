@@ -1,0 +1,20 @@
+node_modules/
+dist/
+build/
+coverage/
+*.local
+*.log
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# sqlite dev db
+apps/server/prisma/*.db
+apps/server/prisma/*.db-journal
+apps/server/prisma/*.db-*
+
+# os
+.DS_Store
+Thumbs.db
