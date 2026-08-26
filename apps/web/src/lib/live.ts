@@ -19,16 +19,36 @@ export function useLiveEvents(koerbchenId: string | null) {
       } catch {
         return;
       }
+      const invalidate = (key: unknown[]) => qc.invalidateQueries({ queryKey: key });
+
       switch (event.type) {
         case 'drink.logged':
         case 'drink.goalReached':
-          qc.invalidateQueries({ queryKey: ['drink', 'today', koerbchenId] });
+          invalidate(['drink', 'today', koerbchenId]);
           break;
         case 'stars.updated':
-          qc.invalidateQueries({ queryKey: ['drink', 'today', koerbchenId] });
+          invalidate(['stars', koerbchenId]);
+          break;
+        case 'diaper.updated':
+        case 'diaper.low':
+          invalidate(['diaper', koerbchenId]);
+          break;
+        case 'change.logged':
+        case 'change.reminder':
+          invalidate(['change', koerbchenId]);
+          break;
+        case 'reward.updated':
+          invalidate(['rewards', koerbchenId]);
+          break;
+        case 'redemption.updated':
+          invalidate(['redemptions', koerbchenId]);
+          break;
+        case 'quickcall.received':
+        case 'quickcall.acknowledged':
+          invalidate(['quickcalls', koerbchenId]);
           break;
         case 'koerbchen.updated':
-          qc.invalidateQueries({ queryKey: ['koerbchen', koerbchenId] });
+          invalidate(['koerbchen', koerbchenId]);
           break;
         default:
           break;

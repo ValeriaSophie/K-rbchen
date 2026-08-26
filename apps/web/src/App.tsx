@@ -11,6 +11,9 @@ import { useKoerbchen } from './features/koerbchen/useKoerbchen';
 import { SettingsPage } from './features/koerbchen/SettingsPage';
 import { DrinkCard } from './features/drink/DrinkCard';
 import { CaregiverOverview } from './features/drink/CaregiverOverview';
+import { DiaperCard, ChangeCard } from './features/diaper/DiaperChange';
+import { StarsCard, RewardsAdmin } from './features/rewards/Rewards';
+import { QuickCallPanel } from './features/quickcall/QuickCall';
 
 export function App() {
   const me = useMe();
@@ -46,12 +49,23 @@ function Dashboard({ me }: { me: MeDto }) {
       />
 
       <div className="mx-auto max-w-md space-y-4 p-4">
-        {role === 'pupp' && <DrinkCard koerbchenId={koerbchenId} userId={me.user.id} />}
+        {role === 'pupp' && (
+          <>
+            <DrinkCard koerbchenId={koerbchenId} userId={me.user.id} />
+            <ChangeCard koerbchenId={koerbchenId} />
+            <StarsCard koerbchenId={koerbchenId} userId={me.user.id} />
+            <QuickCallPanel koerbchenId={koerbchenId} role={role} currentUserId={me.user.id} />
+          </>
+        )}
 
         {role === 'caregiver' && koerbchen.data && (
           <>
             <InviteCard code={koerbchen.data.inviteCode} />
             <CaregiverOverview koerbchen={koerbchen.data} />
+            <DiaperCard koerbchenId={koerbchenId} />
+            <ChangeCard koerbchenId={koerbchenId} />
+            <RewardsAdmin koerbchen={koerbchen.data} />
+            <QuickCallPanel koerbchenId={koerbchenId} role={role} currentUserId={me.user.id} />
             {showSettings ? (
               <SettingsPage koerbchen={koerbchen.data} onDone={() => setShowSettings(false)} />
             ) : (

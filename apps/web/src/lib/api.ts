@@ -4,6 +4,15 @@ import type {
   DrinkTodayDto,
   KoerbchenSettingsInput,
   Role,
+  DiaperStatusDto,
+  ChangeStatusDto,
+  RewardDto,
+  RewardInput,
+  StarBalanceDto,
+  RedemptionDto,
+  QuickCallPresetDto,
+  QuickCallPresetInput,
+  QuickCallDto,
 } from '@koerbchen/shared';
 
 export class ApiError extends Error {
@@ -62,4 +71,59 @@ export const api = {
     request<DrinkTodayDto>(
       `/api/koerbchen/${id}/drink/today${userId ? `?userId=${encodeURIComponent(userId)}` : ''}`,
     ),
+
+  // Diapers & changes
+  diaperStatus: (id: string) => request<DiaperStatusDto>(`/api/koerbchen/${id}/diaper`),
+  restockDiaper: (id: string, count: number) =>
+    request<DiaperStatusDto>(`/api/koerbchen/${id}/diaper/restock`, {
+      method: 'POST',
+      body: body({ count }),
+    }),
+  changeStatus: (id: string) => request<ChangeStatusDto>(`/api/koerbchen/${id}/change`),
+  logChange: (id: string, note?: string) =>
+    request<{ change: ChangeStatusDto; diaper: DiaperStatusDto }>(`/api/koerbchen/${id}/change`, {
+      method: 'POST',
+      body: body({ note }),
+    }),
+
+  // Rewards & stars
+  listRewards: (id: string) => request<RewardDto[]>(`/api/koerbchen/${id}/rewards`),
+  createReward: (id: string, input: RewardInput) =>
+    request<RewardDto>(`/api/koerbchen/${id}/rewards`, { method: 'POST', body: body(input) }),
+  deleteReward: (id: string, rewardId: string) =>
+    request<{ ok: boolean }>(`/api/koerbchen/${id}/rewards/${rewardId}`, { method: 'DELETE' }),
+  stars: (id: string, userId?: string) =>
+    request<StarBalanceDto>(
+      `/api/koerbchen/${id}/stars${userId ? `?userId=${encodeURIComponent(userId)}` : ''}`,
+    ),
+  grantStars: (id: string, userId: string, delta: number) =>
+    request<{ balance: number }>(`/api/koerbchen/${id}/stars/grant`, {
+      method: 'POST',
+      body: body({ userId, delta }),
+    }),
+  redeemReward: (id: string, rewardId: string) =>
+    request<RedemptionDto>(`/api/koerbchen/${id}/rewards/${rewardId}/redeem`, { method: 'POST' }),
+  listRedemptions: (id: string) => request<RedemptionDto[]>(`/api/koerbchen/${id}/redemptions`),
+  decideRedemption: (id: string, redemptionId: string, approve: boolean) =>
+    request<RedemptionDto>(`/api/koerbchen/${id}/redemptions/${redemptionId}/decide`, {
+      method: 'POST',
+      body: body({ approve }),
+    }),
+
+  // Quick-call
+  listPresets: (id: string) => request<QuickCallPresetDto[]>(`/api/koerbchen/${id}/quickcall/presets`),
+  createPreset: (id: string, input: QuickCallPresetInput) =>
+    request<QuickCallPresetDto>(`/api/koerbchen/${id}/quickcall/presets`, {
+      method: 'POST',
+      body: body(input),
+    }),
+  deletePreset: (id: string, presetId: string) =>
+    request<{ ok: boolean }>(`/api/koerbchen/${id}/quickcall/presets/${presetId}`, {
+      method: 'DELETE',
+    }),
+  sendQuickCall: (id: string, input: { presetId?: string; text?: string; emoji?: string | null }) =>
+    request<QuickCallDto>(`/api/koerbchen/${id}/quickcall`, { method: 'POST', body: body(input) }),
+  listQuickCalls: (id: string) => request<QuickCallDto[]>(`/api/koerbchen/${id}/quickcall`),
+  ackQuickCall: (id: string, callId: string) =>
+    request<QuickCallDto>(`/api/koerbchen/${id}/quickcall/${callId}/ack`, { method: 'POST' }),
 };
