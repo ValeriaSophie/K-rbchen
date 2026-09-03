@@ -1,0 +1,19 @@
+{
+  "name": "Körbchen",
+  "short_name": "Körbchen",
+  "description": "Fürsorge, gemeinsam getrackt.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#101215",
+  "theme_color": "#101215",
+  "lang": "de",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

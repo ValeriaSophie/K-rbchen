@@ -1,0 +1,102 @@
+{
+  "tool": "build-phase",
+  "version": 2,
+  "startedAt": "2026-09-01T21:18:56.498Z",
+  "comp": null,
+  "direction": "4b70157d",
+  "breakpoint": null,
+  "artifact": null,
+  "phase": "review",
+  "phases": {
+    "comps": {
+      "status": "skipped",
+      "openedAt": "2026-09-01T21:18:56.494Z",
+      "closedAt": "2026-09-02T07:35:23.216Z",
+      "attempts": 1,
+      "notes": [
+        "Skipped: .impeccable/config.json records buildPath \"code\". The comp round is skipped by contract on a code-led build; this state machine was started against the comp-led path in error and abandoned."
+      ],
+      "gate": {
+        "ok": false,
+        "reasons": [
+          "0 comps under .impeccable\\mocks; the comp round puts three compositional options of the chosen direction in front of the user (reference/visualize.md). Generate the missing ones (harness image tool or generate-image.mjs), each with a .json sidecar holding its prompt.",
+          "no comp is approved: put the three comps in front of the user (decision page via serve-question.mjs, or the structured question tool), then set \"approved\": true in the chosen comp's sidecar. A delegated pick is recorded the same way and disclosed."
+        ],
+        "summary": "0 comps, 0 approved",
+        "approved": null,
+        "at": "2026-09-01T21:19:25.184Z"
+      },
+      "forced": null
+    },
+    "spec": {
+      "status": "skipped",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "plates": {
+      "status": "skipped",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "hero": {
+      "status": "skipped",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "sections": {
+      "status": "skipped",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "motion": {
+      "status": "skipped",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "responsive": {
+      "status": "skipped",
+      "openedAt": null,
+      "closedAt": null,
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    },
+    "review": {
+      "status": "closed",
+      "openedAt": null,
+      "closedAt": "2026-09-02T07:35:23.217Z",
+      "attempts": 0,
+      "notes": [],
+      "gate": null,
+      "forced": null
+    }
+  },
+  "finish": {
+    "buildPath": "code",
+    "review": "impeccable-finish-reviewer",
+    "disposition": "fix",
+    "fixRound": 1,
+    "at": "2026-09-02T07:35:23.217Z"
+  }
+}

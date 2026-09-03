@@ -1,0 +1,7 @@
+{
+  "origin": "generated",
+  "tool": "SVG feTurbulence (fractalNoise), authored in this repo — no image model involved",
+  "prompt": "Graniteware fleck for the Emaille world: irregular spattered-slip speckle in bone (#f2ece1) on transparent, tileable at 220px, sparse enough to read as material and never as a pattern. fractalNoise baseFrequency 0.9, 4 octaves, seed 7, stitchTiles, alpha thresholded via feColorMatrix (8x - 5.4) so only the noise peaks survive as flecks.",
+  "used_by": [".panel", ".vessel"],
+  "regenerate": "node -e script in apps/web — see git history for apps/web/public/fleck.svg"
+}

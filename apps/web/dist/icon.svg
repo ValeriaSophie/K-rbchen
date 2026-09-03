@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Körbchen as an enamel vessel: cobalt coat, bone rim where the enamel
+       wraps the steel, and one chip at the rim showing the iron underneath. -->
+  <defs>
+    <linearGradient id="iron" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#191c21" />
+      <stop offset="1" stop-color="#0c0e11" />
+    </linearGradient>
+    <linearGradient id="coat" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b3a5c" />
+      <stop offset="1" stop-color="#0f2237" />
+    </linearGradient>
+    <clipPath id="bowl">
+      <path d="M120 202 L150 332 Q156 362 256 362 Q356 362 362 332 L392 202 Z" />
+    </clipPath>
+  </defs>
+
+  <rect width="512" height="512" rx="120" fill="url(#iron)" />
+
+  <!-- the coat -->
+  <path d="M120 202 L150 332 Q156 362 256 362 Q356 362 362 332 L392 202 Z" fill="url(#coat)" />
+  <!-- light gathering down one flank, the way a curved enamel wall catches a room -->
+  <path d="M120 202 L150 332 Q156 362 256 362 L256 202 Z" fill="#f2ece1" opacity="0.06" clip-path="url(#bowl)" />
+
+  <!-- the interior, and the rim: the whole system in one line -->
+  <ellipse cx="256" cy="202" rx="136" ry="38" fill="#0b1725" />
+  <ellipse cx="256" cy="202" rx="136" ry="38" fill="none" stroke="#f2ece1" stroke-width="13" />
+
+  <!-- the chip: coat broken, iron showing -->
+  <path d="M356 176 q14 12 26 30 q-16 6 -30 2 z" fill="#191c21" />
+</svg>
