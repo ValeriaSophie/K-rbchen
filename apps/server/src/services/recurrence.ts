@@ -18,13 +18,27 @@ export const MAX_OCCURRENCES = 366;
 
 const STEP_KINDS: Recurrence[] = ['daily', 'weekly', 'monthly'];
 
-function addStep(d: Date, kind: Recurrence): Date {
-  // Step in UTC so occurrences keep a constant instant-of-day regardless of the
-  // server timezone or daylight-saving transitions (deterministic expansion).
+// Monthly steps are measured from the series anchor rather than from the
+// previous occurrence: stepping a 31st through February would otherwise spill
+// into March and every later occurrence would inherit that drift (31.01. →
+// 03.03. → 03.04. …). Short months clamp to their last day instead.
+function monthlyOccurrence(anchor: Date, monthsAfter: number): Date {
+  const target = new Date(anchor);
+  target.setUTCDate(1);
+  target.setUTCMonth(target.getUTCMonth() + monthsAfter);
+  const lastDay = new Date(
+    Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0),
+  ).getUTCDate();
+  target.setUTCDate(Math.min(anchor.getUTCDate(), lastDay));
+  return target;
+}
+
+// Advances `days` calendar days from `d`. Steps in UTC so occurrences keep a
+// constant instant-of-day regardless of the server timezone or daylight-saving
+// transitions (deterministic expansion).
+function addDays(d: Date, days: number): Date {
   const n = new Date(d);
-  if (kind === 'daily') n.setUTCDate(n.getUTCDate() + 1);
-  else if (kind === 'weekly') n.setUTCDate(n.getUTCDate() + 7);
-  else if (kind === 'monthly') n.setUTCMonth(n.getUTCMonth() + 1);
+  n.setUTCDate(n.getUTCDate() + days);
   return n;
 }
 
@@ -49,20 +63,36 @@ export function expandOccurrences(event: RecurringEvent, from: Date, to: Date): 
   const seriesEnd =
     event.recurrenceEnd && event.recurrenceEnd.getTime() < to.getTime() ? event.recurrenceEnd : to;
 
-  // Fast-forward from the true anchor so weekly/monthly alignment is preserved.
-  let cur = new Date(event.startAt);
-  let ff = 0;
-  while (cur.getTime() < from.getTime() && cur.getTime() <= seriesEnd.getTime() && ff < 100_000) {
-    cur = addStep(cur, kind);
-    ff++;
+  // The n-th occurrence is always derived from the anchor, never from its
+  // predecessor, so no rounding can accumulate across a long series.
+  const nth = (i: number): Date =>
+    kind === 'monthly'
+      ? monthlyOccurrence(event.startAt, i)
+      : addDays(event.startAt, i * (kind === 'weekly' ? 7 : 1));
+
+  // Jump straight to the first occurrence at or after `from` instead of
+  // stepping there one interval at a time — a series anchored years ago must
+  // not cost thousands of iterations per request.
+  let index = 0;
+  if (event.startAt.getTime() < from.getTime()) {
+    const elapsedDays = (from.getTime() - event.startAt.getTime()) / 86_400_000;
+    const estimate =
+      kind === 'daily'
+        ? Math.floor(elapsedDays)
+        : kind === 'weekly'
+          ? Math.floor(elapsedDays / 7)
+          : Math.floor(elapsedDays / 31);
+    index = Math.max(0, estimate);
+    // The estimate is deliberately low; walk the last few steps exactly.
+    while (nth(index).getTime() < from.getTime()) index++;
   }
 
   const result: Occurrence[] = [];
-  let guard = 0;
-  while (cur.getTime() <= seriesEnd.getTime() && guard < MAX_OCCURRENCES) {
-    result.push({ start: new Date(cur), end: makeEnd(cur) });
-    cur = addStep(cur, kind);
-    guard++;
+  while (result.length < MAX_OCCURRENCES) {
+    const start = nth(index);
+    if (start.getTime() > seriesEnd.getTime()) break;
+    result.push({ start, end: makeEnd(start) });
+    index++;
   }
   return result;
 }

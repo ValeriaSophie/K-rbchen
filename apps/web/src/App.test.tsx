@@ -50,6 +50,6 @@ describe('App', () => {
         <App />
       </Providers>,
     );
-    expect(await screen.findByText('Willkommen! 🧺')).toBeInTheDocument();
+    expect(await screen.findByText('Willkommen!')).toBeInTheDocument();
   });
 });

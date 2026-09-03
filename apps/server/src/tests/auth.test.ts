@@ -74,4 +74,53 @@ describe('auth routes', () => {
     expect(res.statusCode).toBe(401);
     await app.close();
   });
+
+  it('rate-limits repeated login attempts with a 429, not a 500', async () => {
+    const app = await buildApp();
+    const attempt = () =>
+      app.inject({
+        method: 'POST',
+        url: '/api/auth/login',
+        payload: { email: 'niemand@example.de', password: 'falsch' },
+      });
+
+    const codes: number[] = [];
+    for (let i = 0; i < 11; i++) codes.push((await attempt()).statusCode);
+
+    expect(codes.slice(0, 10)).toEqual(Array(10).fill(401));
+    const blocked = codes[10];
+    expect(blocked).toBe(429);
+
+    const body = (await attempt()).json();
+    expect(body.error.code).toBe('rate_limited');
+    await app.close();
+  });
+
+  it('treats an e-mail as the same account regardless of casing and padding', async () => {
+    const app = await buildApp();
+    const registered = await app.inject({
+      method: 'POST',
+      url: '/api/auth/register',
+      payload: { email: 'Anna@Example.de', password: 'passwort123', displayName: 'Anna' },
+    });
+    expect(registered.statusCode).toBe(200);
+    expect(registered.json().user.email).toBe('anna@example.de');
+
+    // The same person typing their address the way they remember it.
+    const login = await app.inject({
+      method: 'POST',
+      url: '/api/auth/login',
+      payload: { email: '  ANNA@example.de ', password: 'passwort123' },
+    });
+    expect(login.statusCode).toBe(200);
+
+    // …and no second account can shadow the first.
+    const duplicate = await app.inject({
+      method: 'POST',
+      url: '/api/auth/register',
+      payload: { email: 'anna@EXAMPLE.de', password: 'passwort123', displayName: 'Anna2' },
+    });
+    expect(duplicate.statusCode).toBe(409);
+    await app.close();
+  });
 });

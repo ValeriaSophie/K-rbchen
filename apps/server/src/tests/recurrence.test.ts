@@ -82,4 +82,37 @@ describe('expandOccurrences', () => {
     );
     expect(occ.length).toBeLessThanOrEqual(MAX_OCCURRENCES);
   });
+
+  it('keeps a monthly series on its anchor day instead of drifting past short months', () => {
+    // A series anchored on the 31st has to clamp in February and then return to
+    // the 31st — stepping month by month would spill into March and leave every
+    // later occurrence on the 3rd.
+    const occ = expandOccurrences(
+      base({ startAt: D('2026-01-31T10:00:00Z'), recurrence: 'monthly' }),
+      D('2026-01-01T00:00:00Z'),
+      D('2026-05-31T23:59:59Z'),
+    );
+    expect(occ.map((o) => o.start.toISOString().slice(0, 10))).toEqual([
+      '2026-01-31',
+      '2026-02-28',
+      '2026-03-31',
+      '2026-04-30',
+      '2026-05-31',
+    ]);
+  });
+
+  it('aligns a long-running series to the window without walking every step', () => {
+    // Anchored years before the window: the result must still land on the right
+    // weekday, and getting there must not cost thousands of iterations.
+    const occ = expandOccurrences(
+      base({ startAt: D('2020-03-04T10:00:00Z'), recurrence: 'weekly' }),
+      D('2026-03-01T00:00:00Z'),
+      D('2026-03-31T23:59:59Z'),
+    );
+    expect(occ.length).toBeGreaterThan(0);
+    for (const o of occ) {
+      expect(o.start.getUTCDay()).toBe(D('2020-03-04T10:00:00Z').getUTCDay());
+      expect(o.start.getTime()).toBeGreaterThanOrEqual(D('2026-03-01T00:00:00Z').getTime());
+    }
+  });
 });

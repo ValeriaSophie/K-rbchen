@@ -30,7 +30,6 @@ export interface KoerbchenDto {
   inviteCode: string;
   drinkGoalMl: number;
   changeIntervalMinutes: number;
-  diaperCount: number;
   diaperLowThreshold: number;
   lastChangeAt: string | null;
   members: Array<{ userId: string; displayName: string; role: Role }>;
@@ -54,10 +53,27 @@ export interface DrinkTodayDto {
 
 // ---- Diapers / changes -----------------------------------------------------
 
-export interface DiaperStatusDto {
+// A configurable diaper type with its own stock. isLow compares count against
+// the Körbchen-wide lowThreshold (echoed here for the client's convenience).
+export interface DiaperTypeDto {
+  id: string;
+  name: string;
+  emoji: string | null;
+  note: string | null;
   count: number;
   lowThreshold: number;
   isLow: boolean;
+  sortOrder: number;
+  // false = retired: kept for history and restockable, but no longer offered
+  // when logging a change.
+  active: boolean;
+}
+
+export interface DiaperTypeInput {
+  name: string;
+  emoji?: string | null;
+  note?: string | null;
+  sortOrder?: number;
 }
 
 export interface ChangeStatusDto {
@@ -65,6 +81,65 @@ export interface ChangeStatusDto {
   intervalMinutes: number;
   dueAt: string | null;
   isDue: boolean;
+}
+
+// ---- Bags / packing lists --------------------------------------------------
+
+export interface BagItemDto {
+  id: string;
+  name: string;
+  quantity: number;
+  note: string | null;
+  packed: boolean;
+  sortOrder: number;
+}
+
+export interface BagItemInput {
+  name: string;
+  quantity?: number;
+  note?: string | null;
+  sortOrder?: number;
+}
+
+export interface BagDto {
+  id: string;
+  name: string;
+  emoji: string | null;
+  sortOrder: number;
+  items: BagItemDto[];
+  packedCount: number;
+  totalCount: number;
+}
+
+export interface BagInput {
+  name: string;
+  emoji?: string | null;
+  sortOrder?: number;
+}
+
+// ---- Plushies / Steckbriefe -------------------------------------------------
+
+export interface PlushieDto {
+  id: string;
+  name: string;
+  emoji: string | null;
+  species: string | null;
+  character: string | null;
+  favorites: string | null;
+  bio: string | null;
+  photo: string | null; // data: URL of a client-resized thumbnail
+  sortOrder: number;
+}
+
+export interface PlushieInput {
+  name: string;
+  emoji?: string | null;
+  species?: string | null;
+  character?: string | null;
+  favorites?: string | null;
+  bio?: string | null;
+  photo?: string | null;
+  sortOrder?: number;
 }
 
 // ---- Rewards / stars -------------------------------------------------------
@@ -180,6 +255,8 @@ export type LiveEventType =
   | 'diaper.low'
   | 'change.logged'
   | 'change.reminder'
+  | 'bag.updated'
+  | 'plushie.updated'
   | 'reward.updated'
   | 'redemption.updated'
   | 'stars.updated'

@@ -1,3 +1,4 @@
+import { randomBytes } from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import type { KoerbchenDto, Role } from '@koerbchen/shared';
@@ -5,6 +6,7 @@ import { prisma } from '../lib/prisma';
 import { requireUser, requireMembership } from '../plugins/auth';
 import { conflict, notFound, badRequest } from '../lib/errors';
 import { emitLiveEvent } from '../lib/events';
+import { createDefaultBags } from './bags';
 
 const roleSchema = z.enum(['caregiver', 'pupp']);
 const createSchema = z.object({ name: z.string().min(1).max(60), role: roleSchema });
@@ -16,8 +18,18 @@ const settingsSchema = z.object({
   diaperLowThreshold: z.number().int().min(0).max(100).optional(),
 });
 
+// An invite code is the only thing standing between a stranger and a family's
+// care journal, so it comes from the CSPRNG rather than Math.random (whose
+// sequence is predictable from previously observed values). Ambiguous glyphs
+// (0/O, 1/I) are left out because the code gets read aloud and retyped.
+const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const CODE_LENGTH = 8;
+
 function makeInviteCode(): string {
-  return Math.random().toString(36).slice(2, 8).toUpperCase();
+  const bytes = randomBytes(CODE_LENGTH);
+  let code = '';
+  for (const b of bytes) code += CODE_ALPHABET[b % CODE_ALPHABET.length];
+  return code;
 }
 
 async function toDto(koerbchenId: string): Promise<KoerbchenDto> {
@@ -31,7 +43,6 @@ async function toDto(koerbchenId: string): Promise<KoerbchenDto> {
     inviteCode: k.inviteCode,
     drinkGoalMl: k.drinkGoalMl,
     changeIntervalMinutes: k.changeIntervalMinutes,
-    diaperCount: k.diaperCount,
     diaperLowThreshold: k.diaperLowThreshold,
     lastChangeAt: k.lastChangeAt ? k.lastChangeAt.toISOString() : null,
     members: k.memberships.map((m) => ({
@@ -50,9 +61,15 @@ export async function koerbchenRoutes(app: FastifyInstance) {
     while (await prisma.koerbchen.findUnique({ where: { inviteCode } })) {
       inviteCode = makeInviteCode();
     }
-    const k = await prisma.koerbchen.create({ data: { name: input.name, inviteCode } });
-    await prisma.membership.create({
-      data: { userId: user.id, koerbchenId: k.id, role: input.role },
+    // One unit of work: a Körbchen without its creator's membership would be
+    // invisible to everyone, including the person who just created it.
+    const k = await prisma.$transaction(async (tx) => {
+      const created = await tx.koerbchen.create({ data: { name: input.name, inviteCode } });
+      await tx.membership.create({
+        data: { userId: user.id, koerbchenId: created.id, role: input.role },
+      });
+      await createDefaultBags(created.id, tx);
+      return created;
     });
     return toDto(k.id);
   });

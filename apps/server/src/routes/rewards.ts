@@ -190,20 +190,33 @@ export async function rewardRoutes(app: FastifyInstance) {
     if (approve) {
       const balance = await getStarBalance(id, redemption.puppUserId);
       if (balance < redemption.reward.costStars) throw badRequest('Pupp hat nicht genug Sterne');
-      await prisma.starTransaction.create({
-        data: {
-          koerbchenId: id,
-          userId: redemption.puppUserId,
-          delta: -redemption.reward.costStars,
-          reason: 'redemption',
-          refId: redemption.id,
-        },
-      });
     }
-    const updated = await prisma.rewardRedemption.update({
-      where: { id: redemptionId },
-      data: { status: approve ? 'approved' : 'denied', decidedAt: new Date() },
-      include: { reward: true },
+
+    // Claim the request and book the stars together. The status guard is part
+    // of the update, so two caregivers tapping "OK" at the same moment cannot
+    // both win and charge the pupp twice.
+    const updated = await prisma.$transaction(async (tx) => {
+      const claimed = await tx.rewardRedemption.updateMany({
+        where: { id: redemptionId, status: 'requested' },
+        data: { status: approve ? 'approved' : 'denied', decidedAt: new Date() },
+      });
+      if (claimed.count === 0) throw badRequest('Bereits entschieden');
+
+      if (approve) {
+        await tx.starTransaction.create({
+          data: {
+            koerbchenId: id,
+            userId: redemption.puppUserId,
+            delta: -redemption.reward.costStars,
+            reason: 'redemption',
+            refId: redemption.id,
+          },
+        });
+      }
+      return tx.rewardRedemption.findUniqueOrThrow({
+        where: { id: redemptionId },
+        include: { reward: true },
+      });
     });
 
     const at = new Date().toISOString();

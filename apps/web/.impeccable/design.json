@@ -1,0 +1,565 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-02T00:00:00.000Z",
+  "title": "Design System: Körbchen",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Cold Iron",
+        "canonical": "#101215",
+        "tonalRamp": [
+          "#0a0c0e",
+          "#101215",
+          "#191c21",
+          "#23272d",
+          "#2e333a",
+          "#3c424b",
+          "#6b7280",
+          "#8d9299"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Bone",
+        "canonical": "#f2ece1",
+        "tonalRamp": [
+          "#1a1d22",
+          "#23272d",
+          "#3c424b",
+          "#8d9299",
+          "#a49c90",
+          "#c9c2b6",
+          "#e4ded2",
+          "#f2ece1"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Worn Bone",
+        "canonical": "#a49c90",
+        "tonalRamp": [
+          "#1a1d22",
+          "#2e333a",
+          "#3c424b",
+          "#6b7280",
+          "#8d9299",
+          "#a49c90",
+          "#c9c2b6",
+          "#e4ded2"
+        ]
+      },
+      "oxblood": {
+        "role": "secondary",
+        "displayName": "Fired Oxblood",
+        "canonical": "#a8402f",
+        "tonalRamp": [
+          "#22100d",
+          "#2f1512",
+          "#451d18",
+          "#64291f",
+          "#a8402f",
+          "#e08d78",
+          "#f0c0b0",
+          "#f8e3dc"
+        ]
+      },
+      "oxblood-ink": {
+        "role": "secondary",
+        "displayName": "Oxblood Ink",
+        "canonical": "#f0a48f",
+        "tonalRamp": [
+          "#451d18",
+          "#64291f",
+          "#a8402f",
+          "#e08d78",
+          "#f0a48f",
+          "#f0c5b9",
+          "#f8e3dc",
+          "#fdf3ef"
+        ]
+      },
+      "star": {
+        "role": "tertiary",
+        "displayName": "Fired Ochre",
+        "canonical": "#d9a63a",
+        "tonalRamp": [
+          "#1e1808",
+          "#2b220b",
+          "#3d3010",
+          "#574318",
+          "#b08528",
+          "#d9a63a",
+          "#e8bd63",
+          "#f6e5c3"
+        ]
+      },
+      "enamel-sky": {
+        "role": "primary",
+        "displayName": "Cobalt Night (Trinken)",
+        "canonical": "#16304d",
+        "tonalRamp": [
+          "#0d1e32",
+          "#122840",
+          "#16304d",
+          "#1d4066",
+          "#2a5e93",
+          "#4a86c2",
+          "#6ea8dd",
+          "#bcd8f2"
+        ]
+      },
+      "enamel-mint": {
+        "role": "primary",
+        "displayName": "Enamel Fir (Windel)",
+        "canonical": "#123a2e",
+        "tonalRamp": [
+          "#0b2620",
+          "#0e3026",
+          "#123a2e",
+          "#17483a",
+          "#1f5c4a",
+          "#2f8f70",
+          "#5cb493",
+          "#b3ded0"
+        ]
+      },
+      "enamel-coral": {
+        "role": "primary",
+        "displayName": "Burnt Coral (Taschen)",
+        "canonical": "#4a2118",
+        "tonalRamp": [
+          "#331610",
+          "#3d1b13",
+          "#4a2118",
+          "#63301f",
+          "#8c4630",
+          "#b2634a",
+          "#d08163",
+          "#ecc3b1"
+        ]
+      },
+      "enamel-teal": {
+        "role": "primary",
+        "displayName": "Deep Teal (Kuscheltiere)",
+        "canonical": "#0f3639",
+        "tonalRamp": [
+          "#092528",
+          "#0c2c2f",
+          "#0f3639",
+          "#154a4e",
+          "#256f73",
+          "#3d9296",
+          "#56b0b3",
+          "#aeddde"
+        ]
+      },
+      "enamel-gold": {
+        "role": "primary",
+        "displayName": "Fired Ochre Body (Sterne)",
+        "canonical": "#402c0d",
+        "tonalRamp": [
+          "#2c1e08",
+          "#35250a",
+          "#402c0d",
+          "#574318",
+          "#b08528",
+          "#d9a63a",
+          "#e8bd63",
+          "#f0d296"
+        ]
+      },
+      "enamel-olive": {
+        "role": "primary",
+        "displayName": "Olive Drab (Ruf)",
+        "canonical": "#33391c",
+        "tonalRamp": [
+          "#232815",
+          "#2b3018",
+          "#33391c",
+          "#454d26",
+          "#6d7840",
+          "#8d9757",
+          "#a8b072",
+          "#d3d8b3"
+        ]
+      },
+      "enamel-grape": {
+        "role": "primary",
+        "displayName": "Aubergine (Kalender)",
+        "canonical": "#2c1f47",
+        "tonalRamp": [
+          "#1e1532",
+          "#251a3c",
+          "#2c1f47",
+          "#3d2c63",
+          "#5c4791",
+          "#7d68b6",
+          "#9c8ad0",
+          "#cec5ea"
+        ]
+      },
+      "enamel-iron": {
+        "role": "primary",
+        "displayName": "Undyed Graniteware (Setup)",
+        "canonical": "#33322d",
+        "tonalRamp": [
+          "#232320",
+          "#2a2a26",
+          "#33322d",
+          "#45443d",
+          "#6b695e",
+          "#8d8a7c",
+          "#a8a496",
+          "#d8d3c4"
+        ]
+      },
+      "recess-scored": {
+        "role": "neutral",
+        "displayName": "Scored Recess",
+        "canonical": "rgba(0, 0, 0, 0.24)",
+        "tonalRamp": [
+          "rgba(0,0,0,0.42)",
+          "rgba(0,0,0,0.3)",
+          "rgba(0,0,0,0.24)"
+        ]
+      },
+      "recess-tray": {
+        "role": "neutral",
+        "displayName": "Tray Recess",
+        "canonical": "rgba(0, 0, 0, 0.3)",
+        "tonalRamp": [
+          "rgba(0,0,0,0.42)",
+          "rgba(0,0,0,0.3)",
+          "rgba(0,0,0,0.24)"
+        ]
+      },
+      "recess-well": {
+        "role": "neutral",
+        "displayName": "Well Recess",
+        "canonical": "rgba(0, 0, 0, 0.42)",
+        "tonalRamp": [
+          "rgba(0,0,0,0.42)",
+          "rgba(0,0,0,0.3)",
+          "rgba(0,0,0,0.24)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display Reading",
+        "purpose": "The one number a section exists to show: today's millilitres, the invite code. At most one per panel, tabular figures."
+      },
+      "display-code": {
+        "displayName": "Display Code",
+        "purpose": "The invite code only. Wide 0.26em tracking is what makes a character string read as stamped on a tin; the smaller 2.6rem step is what lets it hold that tracking on a phone."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "The Körbchen name in the header and any stamped numeric reading."
+      },
+      "headline": {
+        "displayName": "Tin Label",
+        "purpose": "The tin's only name. Replaces the section heading entirely."
+      },
+      "title": {
+        "displayName": "Tin Sublabel",
+        "purpose": "A division inside a tin, below the tin's own name."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "All prose, input text and history rows. Archivo, sentence case, German."
+      },
+      "input": {
+        "displayName": "Input",
+        "purpose": "The value typed into a field. 1rem is a floor, not a preference: below 16px iOS zooms the page on focus."
+      },
+      "label": {
+        "displayName": "Stencil Label",
+        "purpose": "Field labels, the header identity line, badges and tab labels."
+      },
+      "control": {
+        "displayName": "Control Stencil",
+        "purpose": "Every button and segmented control — the same plate as every label."
+      }
+    },
+    "shadows": [
+      {
+        "name": "tin",
+        "value": "0 0 0 1.5px rgba(242,236,225,0.24), inset 0 1px 0 rgba(242,236,225,0.14), 0 10px 20px -14px rgba(0,0,0,0.9)",
+        "purpose": "Every panel: soft bone rim, lit top edge, tight contact shadow."
+      },
+      {
+        "name": "dipped",
+        "value": "0 0 0 1.5px rgba(242,236,225,0.82), inset 0 1px 0 rgba(242,236,225,0.22), 0 4px 10px -6px rgba(0,0,0,0.9)",
+        "purpose": "Primary button at rest."
+      },
+      {
+        "name": "dipped-pressed",
+        "value": "0 0 0 1.5px rgba(242,236,225,0.82), inset 0 2px 5px rgba(0,0,0,0.5)",
+        "purpose": "Primary button on press, with a 1px downward translate. The highlight sinks; nothing drops out from underneath."
+      },
+      {
+        "name": "scored",
+        "value": "inset 0 0 0 1.5px rgba(242,236,225,0.24)",
+        "purpose": "Secondary buttons, chips, badges, tickboxes, icon holders — scored into the enamel rather than dipped."
+      },
+      {
+        "name": "recess",
+        "value": "inset 0 0 0 1.5px rgba(242,236,225,0.82), inset 0 2px 6px rgba(0,0,0,0.45)",
+        "purpose": "The jug well and, softened, the form field tray."
+      },
+      {
+        "name": "set-down",
+        "value": "0 0 0 1.5px rgba(242,236,225,0.82), inset 0 1px 0 rgba(242,236,225,0.16), 0 14px 26px -16px rgba(0,0,0,0.95)",
+        "purpose": "A toast: a smaller tin set down on the shelf."
+      },
+      {
+        "name": "chipped-rim",
+        "value": "0 0 0 1.5px rgba(242,236,225,0.24)",
+        "purpose": "Disabled: the coat has broken and iron shows through."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-settle",
+        "value": "cubic-bezier(0.16, 0.84, 0.32, 1)",
+        "purpose": "Exponential ease-out with no overshoot. Enamel settles, it never bounces. Used by tin-flood, tin-set-down and the jug fill."
+      },
+      {
+        "name": "ease-press",
+        "value": "cubic-bezier(0.22, 0.61, 0.36, 1)",
+        "purpose": "Control press and chip state, 0.14–0.16s."
+      },
+      {
+        "name": "tin-flood",
+        "value": "tin-flood 0.44s cubic-bezier(0.16, 0.84, 0.32, 1) both",
+        "purpose": "The signature moment: opening a tin floods its body colour up from under the rim. Keyed on the section id, so once per switch and never on a re-render."
+      },
+      {
+        "name": "tin-set-down",
+        "value": "tin-set-down 0.42s cubic-bezier(0.16, 0.84, 0.32, 1) both",
+        "purpose": "A toast settles downward from -9px. No slide, no bounce."
+      },
+      {
+        "name": "jug-fill",
+        "value": "transform 0.85s cubic-bezier(0.16, 0.84, 0.32, 1)",
+        "purpose": "The jug level rises. Transform only — never height or width."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "@media (prefers-reduced-motion: reduce) { * { animation-duration: 0.001ms !important; transition: none !important; } }",
+        "purpose": "All motion is removable and is removed."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "shelf-col",
+        "value": "28rem"
+      },
+      {
+        "name": "shelf-board",
+        "value": "31rem"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      }
+    ],
+    "texture": [
+      {
+        "name": "iron-grain",
+        "value": "radial-gradient(rgba(242,236,225,0.045) 0.6px, transparent 0.7px) 0 0/13px 17px, radial-gradient(rgba(242,236,225,0.03) 0.5px, transparent 0.6px) 7px 5px/23px 11px; opacity: 0.4",
+        "purpose": "Rolled-steel tooth on the shelf ground. A fine even lattice, because milled iron is regular."
+      },
+      {
+        "name": "fleck",
+        "value": "url('/fleck.svg') 240px 240px; opacity: 0.55",
+        "purpose": "Graniteware speckle on tin bodies and the jug. Generated feTurbulence fractal noise (provenance in public/fleck.svg.json) — irregular, because a lattice reads as a pattern the moment two flecks line up."
+      }
+    ],
+    "recess": [
+      {
+        "name": "recess-scored",
+        "value": "rgba(0, 0, 0, 0.24)",
+        "purpose": "A disc or plate scored into the enamel: icon holders, emoji tokens, badges, tickboxes, empty stars, and the pressed state of a secondary button or compartment."
+      },
+      {
+        "name": "recess-tray",
+        "value": "rgba(0, 0, 0, 0.3)",
+        "purpose": "Something a value goes into: form fields and the segmented control track."
+      },
+      {
+        "name": "recess-well",
+        "value": "rgba(0, 0, 0, 0.42)",
+        "purpose": "The jug's empty wall. The deepest step, so the fill reads against it."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button (Dipped Control)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The dipped control: enamel body, full bone rim, stencilled caps. Takes the open tin's body colour, never a colour of its own.",
+      "html": "<button class=\"ds-btn-primary\">Eintragen</button>",
+      "css": ".ds-btn-primary { font-family: 'Archivo Narrow', sans-serif; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink, #f2ece1); background: var(--enamel, #16304d); border: none; cursor: pointer; border-radius: 9px; padding: 12px 20px; box-shadow: 0 0 0 1.5px rgba(242,236,225,0.82), inset 0 1px 0 rgba(242,236,225,0.22), 0 4px 10px -6px rgba(0,0,0,0.9); transition: box-shadow 0.14s cubic-bezier(0.22,0.61,0.36,1), transform 0.14s cubic-bezier(0.22,0.61,0.36,1); } .ds-btn-primary:hover { box-shadow: 0 0 0 1.5px rgba(242,236,225,0.82), inset 0 1px 0 rgba(242,236,225,0.34), 0 4px 10px -6px rgba(0,0,0,0.9); } .ds-btn-primary:focus-visible { outline: 2px solid rgba(242,236,225,0.82); outline-offset: 2px; } .ds-btn-primary:active { transform: translateY(1px); box-shadow: 0 0 0 1.5px rgba(242,236,225,0.82), inset 0 2px 5px rgba(0,0,0,0.5); } .ds-btn-primary:disabled { color: #a49c90; background: #101215; box-shadow: 0 0 0 1.5px rgba(242,236,225,0.24); cursor: default; }"
+    },
+    {
+      "name": "Secondary Button (Scored)",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "The shape scored into the enamel rather than dipped. Used beside a primary, or where a control must not claim the tin's colour.",
+      "html": "<button class=\"ds-btn-soft\">Abbrechen</button>",
+      "css": ".ds-btn-soft { font-family: 'Archivo Narrow', sans-serif; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.09em; color: var(--ink, #f2ece1); background: rgba(242,236,225,0.05); border: none; cursor: pointer; border-radius: 9px; padding: 10px 20px; box-shadow: inset 0 0 0 1.5px rgba(242,236,225,0.24); transition: background-color 0.14s ease, box-shadow 0.14s ease; } .ds-btn-soft:hover { background: rgba(242,236,225,0.09); box-shadow: inset 0 0 0 1.5px rgba(242,236,225,0.82); } .ds-btn-soft:focus-visible { outline: 2px solid rgba(242,236,225,0.82); outline-offset: 2px; } .ds-btn-soft:active { background: rgba(0,0,0,0.24); box-shadow: inset 0 2px 5px rgba(0,0,0,0.45); }"
+    },
+    {
+      "name": "Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "A recessed enamel tray. The rim sits at 0.38 alpha so the tray never disappears into the body colour.",
+      "html": "<input class=\"ds-field\" type=\"text\" placeholder=\"eigene ml\" />",
+      "css": ".ds-field { width: 100%; border-radius: 8px; background: var(--recess-tray, rgba(0,0,0,0.3)); border: 1.5px solid rgba(242,236,225,0.38); color: #f2ece1; padding: 0.7rem 0.85rem; font-size: 1rem; font-family: 'Archivo', sans-serif; font-weight: 500; outline: none; transition: border-color 0.18s ease, box-shadow 0.18s ease; } .ds-field::placeholder { color: #a49c90; opacity: 0.75; } .ds-field:focus { border-color: rgba(242,236,225,0.82); box-shadow: inset 0 0 0 1px rgba(242,236,225,0.24); }"
+    },
+    {
+      "name": "Shelf Label (Tab)",
+      "kind": "nav",
+      "refersTo": "tab-selected",
+      "description": "A stencilled section label on the shelf. Exactly one is lit; it fills with its own firing and is the only saturated thing on the screen. The unread count rides inside the label, never on its corner.",
+      "html": "<div style=\"display:flex;gap:6px\"><button class=\"ds-tab\" aria-selected=\"true\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M9 7.5h6v9.2a3 3 0 0 1-3 3 3 3 0 0 1-3-3z\"/><path d=\"M9 7.5V6h6v1.5\"/><path d=\"M10.4 6c0-2.3 3.2-2.3 3.2 0\"/><path d=\"M11 11.5h2M11 14.5h2\"/></svg>Trinken</button><button class=\"ds-tab\">Windel</button><button class=\"ds-tab\">Ruf<span class=\"ds-tabbadge\">2</span></button></div>",
+      "css": ".ds-tab { display: inline-flex; align-items: center; gap: 6px; font-family: 'Archivo Narrow', sans-serif; font-weight: 600; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: #a49c90; background: transparent; border: none; cursor: pointer; border-radius: 8px; padding: 8px 14px; box-shadow: inset 0 0 0 1.5px transparent; transition: color 0.16s ease, background-color 0.16s ease, box-shadow 0.16s ease; } .ds-tab:hover { color: #f2ece1; } .ds-tab:focus-visible { outline: 2px solid rgba(242,236,225,0.82); outline-offset: 2px; } .ds-tab[aria-selected=\"true\"] { color: #f2ece1; background: var(--enamel, #16304d); box-shadow: 0 0 0 1.5px rgba(242,236,225,0.82), inset 0 1px 0 rgba(242,236,225,0.18); } .ds-tabbadge { display: inline-grid; place-items: center; min-width: 1.1rem; height: 1.1rem; padding: 0 0.28rem; margin-left: 4px; border-radius: 999px; background: #a8402f; color: #fbf3f1; font-family: 'Archivo Narrow', sans-serif; font-weight: 700; font-size: 0.72rem; line-height: 1; box-shadow: 0 0 0 1.5px rgba(242,236,225,0.45); }"
+    },
+    {
+      "name": "Tin (Panel)",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "A section's vessel: enamel body, bone rim, lit top edge, graniteware fleck. Its name is the stencil inside it, and it never contains another card.",
+      "html": "<section class=\"ds-tin\"><h2 class=\"ds-tin-label\">Heute getrunken</h2><ul class=\"ds-compartments\"><li class=\"ds-compartment\"><span>250 ml</span><span class=\"ds-muted\">09:20</span></li><li class=\"ds-compartment\"><span>200 ml</span><span class=\"ds-muted\">11:05</span></li></ul></section>",
+      "css": ".ds-tin { position: relative; background: linear-gradient(178deg, var(--panel-1, #16304d), var(--panel-2, #122840)); border-radius: 14px; padding: 24px; color: #f2ece1; box-shadow: 0 0 0 1.5px rgba(242,236,225,0.24), inset 0 1px 0 rgba(242,236,225,0.14), 0 10px 20px -14px rgba(0,0,0,0.9); } .ds-tin-label { font-family: 'Archivo Narrow', sans-serif; font-size: 1.05rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #f2ece1; margin: 0 0 16px; } .ds-compartments { list-style: none; margin: 0; padding: 0; border-top: 1.5px solid rgba(242,236,225,0.24); } .ds-compartments > li + li { border-top: 1.5px solid rgba(242,236,225,0.24); } .ds-compartment { display: flex; justify-content: space-between; padding: 0.85rem 0; font-family: 'Archivo', sans-serif; font-size: 0.875rem; font-variant-numeric: tabular-nums; } .ds-muted { color: #a49c90; }"
+    },
+    {
+      "name": "Stamped Plate (Badge)",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "A stock or status reading pressed level into the rim line. Three forms: bare plate, settled (full bone rim, no fill), and the one escalation plate in fired oxblood.",
+      "html": "<div style=\"display:flex;gap:8px\"><span class=\"ds-badge\">4 links</span><span class=\"ds-badge ds-badge-done\">Ziel erreicht</span><span class=\"ds-badge ds-badge-low\">knapp!</span></div>",
+      "css": ".ds-badge { display: inline-block; white-space: nowrap; font-family: 'Archivo Narrow', sans-serif; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: #f2ece1; background: var(--recess-scored, rgba(0,0,0,0.24)); padding: 5px 10px; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgba(242,236,225,0.24); } .ds-badge-done { background: transparent; box-shadow: inset 0 0 0 1.5px rgba(242,236,225,0.82); } .ds-badge-low { color: #fbf3f1; background: #a8402f; box-shadow: inset 0 0 0 1.5px rgba(242,236,225,0.5); }"
+    },
+    {
+      "name": "Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "An unpainted compartment until it is chosen. Body face, not stencil, because a chip carries a user's word.",
+      "html": "<div style=\"display:flex;gap:8px\"><button class=\"ds-chip\" aria-pressed=\"true\">Kita</button><button class=\"ds-chip\" aria-pressed=\"false\">Wochenende</button></div>",
+      "css": ".ds-chip { font-family: 'Archivo', sans-serif; font-weight: 500; font-size: 0.875rem; color: #f2ece1; background: rgba(242,236,225,0.05); border: none; cursor: pointer; border-radius: 999px; padding: 8px 14px; box-shadow: inset 0 0 0 1.5px rgba(242,236,225,0.24); transition: background-color 0.16s cubic-bezier(0.22,0.61,0.36,1), box-shadow 0.16s cubic-bezier(0.22,0.61,0.36,1); } .ds-chip:hover { box-shadow: inset 0 0 0 1.5px rgba(242,236,225,0.82); } .ds-chip:focus-visible { outline: 2px solid rgba(242,236,225,0.82); outline-offset: 2px; } .ds-chip[aria-pressed=\"true\"] { color: #f2ece1; background: var(--enamel, #16304d); box-shadow: 0 0 0 1.5px rgba(242,236,225,0.82), inset 0 1px 0 rgba(242,236,225,0.2); }"
+    },
+    {
+      "name": "The Jug",
+      "kind": "custom",
+      "refersTo": "panel",
+      "description": "The signature reading: a graduated measuring vessel that holds 1.25x the goal, scored in quarters, with the goal as the one full-width scored line. The fill is a full-height slab translated on the compositor; the reading stands beside it, never over it.",
+      "html": "<div style=\"display:flex;align-items:center;gap:20px\"><div><div class=\"ds-jug-reading\">450</div><div class=\"ds-jug-sub\">von 1500 ml</div></div><div class=\"ds-vessel\" role=\"img\" aria-label=\"450 von 1500 ml getrunken\"><div class=\"ds-vessel-fill\" style=\"--level:0.24\"></div><div class=\"ds-vessel-scale\" aria-hidden=\"true\"><div class=\"ds-tick\" style=\"bottom:20%\"></div><div class=\"ds-tick ds-tick-major\" style=\"bottom:40%\"></div><div class=\"ds-tick\" style=\"bottom:60%\"></div><div class=\"ds-tick\" style=\"bottom:90%\"></div><div class=\"ds-mark\" style=\"bottom:80%\"></div></div></div></div>",
+      "css": ".ds-jug-reading { font-family: 'Archivo Narrow', sans-serif; font-weight: 700; font-size: 3.75rem; line-height: 1; letter-spacing: 0.08em; color: #f2ece1; font-variant-numeric: tabular-nums; } .ds-jug-sub { font-family: 'Archivo Narrow', sans-serif; font-weight: 700; font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase; color: #a49c90; margin-top: 8px; } .ds-vessel { position: relative; overflow: hidden; height: 10rem; width: 5rem; flex-shrink: 0; border-radius: 10px 10px 13px 13px; background: var(--recess-well, rgba(0,0,0,0.42)); box-shadow: inset 0 0 0 1.5px rgba(242,236,225,0.82), inset 0 2px 6px rgba(0,0,0,0.45); } .ds-vessel-fill { position: absolute; inset: 0; border-top: 2px solid rgba(242,236,225,0.82); background: linear-gradient(180deg, var(--accent, #6ea8dd) 0%, var(--enamel, #16304d) 165%); transform: translateY(calc((1 - var(--level, 0)) * 100%)); transition: transform 0.85s cubic-bezier(0.16,0.84,0.32,1); will-change: transform; } .ds-vessel-scale { position: absolute; inset: 0; z-index: 1; pointer-events: none; } .ds-tick { position: absolute; right: 0; height: 0; width: 34%; border-top: 1.5px solid rgba(242,236,225,0.4); } .ds-tick-major { width: 52%; } .ds-mark { position: absolute; right: 0; left: 0; height: 0; border-top: 1.5px dashed rgba(242,236,225,0.82); }"
+    },
+    {
+      "name": "Toast (Set-Down Tin)",
+      "kind": "custom",
+      "refersTo": "panel",
+      "description": "A small tin set down beside the open one. It carries its own firing rather than the section's, and it arrives by settling downward.",
+      "html": "<div class=\"ds-toast\"><span class=\"ds-toast-ic\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.7\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M18 9a6 6 0 0 0-12 0c0 5-2 6-2 6h16s-2-1-2-6\"/><path d=\"M10.3 19a2 2 0 0 0 3.4 0\"/></svg></span><span>Ruf von Pupp</span></div>",
+      "css": ".ds-toast { display: inline-flex; align-items: center; gap: 8px; border-radius: 999px; padding: 10px 16px; font-family: 'Archivo Narrow', sans-serif; font-weight: 700; font-size: 0.875rem; letter-spacing: 0.03em; color: #f2ece1; background: linear-gradient(178deg, #33391c, #2b3018); box-shadow: 0 0 0 1.5px rgba(242,236,225,0.82), inset 0 1px 0 rgba(242,236,225,0.16), 0 14px 26px -16px rgba(0,0,0,0.95); animation: ds-set-down 0.42s cubic-bezier(0.16,0.84,0.32,1) both; } .ds-toast-ic { color: #d3d8b3; display: inline-flex; } @keyframes ds-set-down { from { opacity: 0; transform: translateY(-9px); } to { opacity: 1; transform: none; } }"
+    },
+    {
+      "name": "Acknowledge Disc",
+      "kind": "button",
+      "refersTo": "ack",
+      "description": "The control that answers an unacknowledged Ruf: an oxblood disc with a full bone rim, the one hot thing in a list of settled ones.",
+      "html": "<button class=\"ds-ack\" aria-label=\"Ruf bestätigen\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 12.5l4.5 4.5L19 7.5\"/></svg></button>",
+      "css": ".ds-ack { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border: none; border-radius: 999px; color: #fbf3f1; background: #a8402f; cursor: pointer; box-shadow: 0 0 0 1.5px rgba(242,236,225,0.82), inset 0 1px 0 rgba(242,236,225,0.3); transition: box-shadow 0.14s ease, transform 0.14s ease; } .ds-ack:hover { box-shadow: 0 0 0 1.5px rgba(242,236,225,0.82), inset 0 1px 0 rgba(242,236,225,0.45); } .ds-ack:focus-visible { outline: 2px solid rgba(242,236,225,0.82); outline-offset: 2px; } .ds-ack:active { transform: translateY(1px); box-shadow: 0 0 0 1.5px rgba(242,236,225,0.82), inset 0 2px 5px rgba(0,0,0,0.5); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Shelf of Enamel Tins",
+    "overview": "Körbchen is fired household enamel — the Riess / graniteware language of a German kitchen — standing on cold rolled iron. Every surface is one deep body colour with a bone hairline where the coat wraps the steel edge, a faint irregular fleck from spattered slip, and stencilled utility caps the way a Vorratsdose says MEHL. Nothing glows, nothing tilts, nothing bounces. Enamel is heavy: it settles.\n\nThe whole answer to \"too loud\" is the one-tin rule. Eight sections each own a firing, but exactly one is ever painted: the open section's body colour floods the shelf label and everything below it, and the other seven labels sit unlit in bone on iron. The result is a dark, one-handed, ten-second surface that reads calm in a dark room without reading clinical, and colourful without ever showing two hues at once.\n\nDepth is carried entirely by the rim. A 1.5px bone hairline is the edge, the focus ring, the fill line, the divider and the disabled state, so the world needs no glow, no coloured under-shadow and no elevation stack. Explicitly refused: the pastel wellness tracker — glowing cards, progress rings, capsule progress bars, foil-sticker rewards, handwritten script, and the mono/typewriter face that was the last survivor of the previous world.",
+    "keyCharacteristics": [
+      "One lit tin per screen; seven unlit bone labels beside it.",
+      "A 1.5px bone rim on every edge, focus, fill line and state.",
+      "Stencilled Archivo Narrow caps for every label, control, badge and count.",
+      "Fired oxblood reserved solely for escalation.",
+      "Fill level carries value; no rings, no chrome.",
+      "Flat, level, square: no tilt, no bounce, no overshoot."
+    ],
+    "rules": [
+      {
+        "name": "The One Lit Tin Rule",
+        "body": "Exactly one firing is painted per screen. `TAB_FEAT` in `App.tsx` is the only place it is decided, and the class goes on both the shelf label and the tabpanel region. A panel that carries its own `feat-*` can light a hue its label does not, and is a defect.",
+        "section": "colors"
+      },
+      {
+        "name": "The Oxblood Reserve Rule",
+        "body": "Oxblood is escalation and nothing else. No section body may be fired in the oxblood family — Ruf was moved from wine to olive drab precisely so its oxblood plate and unread count read against the body instead of as part of it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Inverted Ramp Rule",
+        "body": "The Tailwind ramps `rose`, `amber`, `green` and `red` are redefined in `@theme` to run dark→light (50 darkest, 900 lightest), so incumbent `text-rose-800 on bg-rose-100` markup keeps meaning \"light ink on a dark tint\". The trap is the middle: `bg-rose-500` is worn steel, not pink — it once shipped a grey acknowledge button. Reach for the semantic variables and use a numbered ramp step only for ink-on-tint pairs at the ends.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Stencil Per Tin Rule",
+        "body": "`.tin-label` is a tin's only name. A stencil above a heading that repeats it is a kicker, not a label, and is banned.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Voice Rule",
+        "body": "Every control is sprayed through the same plate as every label: uppercase Archivo Narrow at 0.09em. A sentence-case button beside a stencilled tab is the world speaking two voices.",
+        "section": "typography"
+      },
+      {
+        "name": "The Rim Is The System Rule",
+        "body": "A 1.5px bone hairline carries every edge, focus ring, fill line, divider and state. If a new element needs to be distinguished, give it a rim before you give it a colour, a shadow or a background.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Rim And Recess Rule",
+        "body": "The world has exactly two depth devices. A thing either stands proud (bone rim) or is pressed in (one of the three recess steps: scored 0.24, tray 0.3, well 0.42). A new surface picks one; it never invents a fourth black alpha and never reaches for a gradient, a tint or a border to say the same thing.",
+        "section": "elevation"
+      },
+      {
+        "name": "The No Glow Rule",
+        "body": "No coloured shadow, no bloom, no hard offset block shadow, no tilt. A hard block shadow shipped here once as `0 6px 0 var(--accent-deep)` — a token this world never defined — and rendered as nothing at all.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do decide the firing in `TAB_FEAT` and apply it to both the shelf label and the tabpanel region; let panels inherit it.",
+      "Do reach for the semantic variables (`--enamel`, `--accent`, `--accent-ink`, `--ink`, `--muted`, `--rim`) so a new element follows whichever tin is open.",
+      "Do give every new edge, state and division the 1.5px bone rim before considering any other treatment.",
+      "Do pick a recess depth from the three tokens (`--recess-scored`, `--recess-tray`, `--recess-well`) for any inset fill; a literal `rgba(0,0,0,α)` background is drift.",
+      "Do set every text input at the 1rem step or larger, so iOS never zooms the page on focus.",
+      "Do stencil every label, control, badge and count in uppercase Archivo Narrow, and set every number with tabular figures.",
+      "Do keep escalation to oxblood: the plate (`.badge-low`, `.ack`, `.tabbadge`) for a state, the ink (`--oxblood-ink`) for a word.",
+      "Do carry value with fill level and rim marks — a vessel that fills, scored in quarters — rather than a ring, a bar or a percentage.",
+      "Do animate position and opacity on the compositor with the exponential ease-out (`cubic-bezier(0.16, 0.84, 0.32, 1)`), and let `prefers-reduced-motion` remove it.",
+      "Do give every panel a loading skeleton with the tin's own footprint and an error state that names the problem and offers a retry."
+    ],
+    "donts": [
+      "Don't paint a second firing on screen. No panel carries its own `feat-*`, and no approval, success or status may arrive in a hue the open tin is not.",
+      "Don't fire a section body in the oxblood family, and don't spend oxblood on anything that is not escalation.",
+      "Don't trust a mid-ramp Tailwind colour utility: the ramps are inverted, `bg-rose-500` is worn steel, and that trap has already shipped a grey button.",
+      "Don't put a stencil above a heading that repeats it, and don't add a kicker or eyebrow line over a tin's name — `.tin-label` is the tin's only name.",
+      "Don't invent a fourth recess depth or a raw black background alpha; the ladder is three steps.",
+      "Don't use raw white anywhere — a highlight is bone (`rgba(242,236,225,α)`), including the lit edge of a Stern.",
+      "Don't nest a rounded card inside a panel; divide with compartment hairlines.",
+      "Don't add a glow, a coloured under-shadow, a hard offset block shadow, a tilt, a bounce or any overshoot. Enamel settles.",
+      "Don't introduce a third typeface — no mono, no script, no system display face; a code is stencilled, not typewritten.",
+      "Don't use emoji or glyph characters as interface icons; draw them into the 24×24 set in `lib/icons.tsx`. A user's own emoji is contained in a scored disc, never floated with a drop shadow.",
+      "Don't animate the jug by height or width, and don't set text over its fill."
+    ],
+    "headroom": [
+      "Label wear on the stencil — a real Vorratsdose's plate is never uniform.",
+      "The chipped rim used as general wear rather than only for `:disabled`.",
+      "Set-down weight on the jug fill."
+    ]
+  }
+}

@@ -21,7 +21,6 @@ const koerbchen: KoerbchenDto = {
   inviteCode: 'ABC123',
   drinkGoalMl: 1500,
   changeIntervalMinutes: 180,
-  diaperCount: 0,
   diaperLowThreshold: 5,
   lastChangeAt: null,
   members: [

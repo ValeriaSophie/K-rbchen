@@ -7,6 +7,10 @@ export async function resetDb() {
   await prisma.starTransaction.deleteMany();
   await prisma.drinkLog.deleteMany();
   await prisma.changeLog.deleteMany();
+  await prisma.diaperType.deleteMany();
+  await prisma.bagItem.deleteMany();
+  await prisma.bag.deleteMany();
+  await prisma.plushie.deleteMany();
   await prisma.rewardRedemption.deleteMany();
   await prisma.reward.deleteMany();
   await prisma.quickCall.deleteMany();

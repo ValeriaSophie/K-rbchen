@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { prisma } from './prisma';
+import { env } from '../env';
 
 const SESSION_COOKIE = 'sid';
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 Tage
@@ -23,7 +24,7 @@ export async function createSession(userId: string, reply: FastifyReply): Promis
     httpOnly: true,
     sameSite: 'lax',
     path: '/',
-    secure: process.env.NODE_ENV === 'production',
+    secure: env.isProd,
     expires: expiresAt,
   });
 }

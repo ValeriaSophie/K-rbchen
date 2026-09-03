@@ -45,7 +45,6 @@ model Koerbchen {
   inviteCode            String    @unique
   drinkGoalMl           Int       @default(1500)
   changeIntervalMinutes Int       @default(180)
-  diaperCount           Int       @default(0)
   diaperLowThreshold    Int       @default(5)
   lastChangeAt          DateTime?
   createdAt             DateTime  @default(now())
@@ -53,12 +52,85 @@ model Koerbchen {
   memberships  Membership[]
   drinkLogs    DrinkLog[]
   changeLogs   ChangeLog[]
+  diaperTypes  DiaperType[]
+  bags         Bag[]
+  plushies     Plushie[]
   rewards      Reward[]
   redemptions  RewardRedemption[]
   starTx       StarTransaction[]
   quickPresets QuickCallPreset[]
   quickCalls   QuickCall[]
   calendarEvents CalendarEvent[]
+}
+
+// A packable bag (e.g. swim bag, changing bag) whose contents can be planned
+// and ticked off. Any member can manage it.
+model Bag {
+  id          String   @id @default(cuid())
+  koerbchenId String
+  name        String
+  emoji       String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  koerbchen Koerbchen @relation(fields: [koerbchenId], references: [id], onDelete: Cascade)
+  items     BagItem[]
+
+  @@index([koerbchenId])
+}
+
+model BagItem {
+  id        String   @id @default(cuid())
+  bagId     String
+  name      String
+  quantity  Int      @default(1)
+  note      String?
+  packed    Boolean  @default(false)
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+
+  bag Bag @relation(fields: [bagId], references: [id], onDelete: Cascade)
+
+  @@index([bagId])
+}
+
+// A "Steckbrief" (profile card) for a cuddly toy. Any member may manage it.
+// photo holds a client-resized thumbnail as a data: URL — no file storage.
+model Plushie {
+  id          String   @id @default(cuid())
+  koerbchenId String
+  name        String
+  emoji       String?
+  species     String?
+  character   String?
+  favorites   String?
+  bio         String?
+  photo       String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  koerbchen Koerbchen @relation(fields: [koerbchenId], references: [id], onDelete: Cascade)
+
+  @@index([koerbchenId])
+}
+
+// A configurable diaper type with its own stock (e.g. day / night / a brand).
+// The low-stock warning uses the Körbchen-wide diaperLowThreshold.
+model DiaperType {
+  id          String   @id @default(cuid())
+  koerbchenId String
+  name        String
+  emoji       String?
+  note        String?
+  count       Int      @default(0)
+  sortOrder   Int      @default(0)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  koerbchen  Koerbchen   @relation(fields: [koerbchenId], references: [id], onDelete: Cascade)
+  changeLogs ChangeLog[]
+
+  @@index([koerbchenId])
 }
 
 model Membership {
@@ -89,14 +161,16 @@ model DrinkLog {
 }
 
 model ChangeLog {
-  id          String   @id @default(cuid())
-  koerbchenId String
-  userId      String
-  note        String?
-  createdAt   DateTime @default(now())
+  id           String   @id @default(cuid())
+  koerbchenId  String
+  userId       String
+  diaperTypeId String?
+  note         String?
+  createdAt    DateTime @default(now())
 
-  koerbchen Koerbchen @relation(fields: [koerbchenId], references: [id], onDelete: Cascade)
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  koerbchen  Koerbchen   @relation(fields: [koerbchenId], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  diaperType DiaperType? @relation(fields: [diaperTypeId], references: [id], onDelete: SetNull)
 
   @@index([koerbchenId, createdAt])
 }

@@ -90,6 +90,41 @@ describe('calendar routes', () => {
     await app.close();
   });
 
+  it('rejects an end before the start and a series ending before it begins', async () => {
+    const app = await buildApp();
+    const { koerbchenId, cgCookie } = await setupPair(app);
+    const post = (payload: Record<string, unknown>) =>
+      app.inject(
+        authed(cgCookie, {
+          method: 'POST',
+          url: `/api/koerbchen/${koerbchenId}/calendar`,
+          payload: { title: 'X', forEveryone: true, ...payload },
+        }),
+      );
+
+    // Picking 23:00–01:00 in the form yields both times on the same day, which
+    // would otherwise store an occurrence of minus 22 hours.
+    const backwards = await post({
+      startAt: '2026-09-01T23:00:00.000Z',
+      endAt: '2026-09-01T01:00:00.000Z',
+    });
+    expect(backwards.statusCode).toBe(400);
+
+    const seriesEndsFirst = await post({
+      startAt: '2026-09-01T10:00:00.000Z',
+      recurrence: 'weekly',
+      recurrenceEnd: '2026-08-01T10:00:00.000Z',
+    });
+    expect(seriesEndsFirst.statusCode).toBe(400);
+
+    const ok = await post({
+      startAt: '2026-09-01T10:00:00.000Z',
+      endAt: '2026-09-01T11:00:00.000Z',
+    });
+    expect(ok.statusCode).toBe(200);
+    await app.close();
+  });
+
   it('lets only the creator or a caregiver edit', async () => {
     const app = await buildApp();
     const { koerbchenId, cgCookie, pCookie } = await setupPair(app);

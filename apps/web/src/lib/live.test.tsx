@@ -37,4 +37,34 @@ describe('useLiveEvents', () => {
 
     expect(spy).toHaveBeenCalledWith({ queryKey: ['drink', 'today', 'k1'] });
   });
+
+  it('raises a toast for a Ruf from the other person, but not for your own', () => {
+    vi.stubGlobal('EventSource', FakeEventSource as unknown as typeof EventSource);
+    const qc = new QueryClient();
+    const wrapper = ({ children }: { children: ReactNode }) => (
+      <QueryClientProvider client={qc}>{children}</QueryClientProvider>
+    );
+    const toasts: unknown[] = [];
+    const listener = (e: Event) => toasts.push((e as CustomEvent).detail);
+    window.addEventListener('koerbchen:toast', listener);
+
+    renderHook(() => useLiveEvents('k1', 'me'), { wrapper });
+    const es = FakeEventSource.instances.at(-1)!;
+
+    const call = (fromUserId: string, text: string) => ({
+      type: 'quickcall.received',
+      koerbchenId: 'k1',
+      actorUserId: fromUserId,
+      at: 'now',
+      payload: { id: 'q1', fromUserId, fromDisplayName: 'Mia', text, emoji: null, acknowledgedAt: null, createdAt: 'now' },
+    });
+
+    es.onmessage?.({ data: JSON.stringify(call('them', 'Fläschchen bitte')) } as MessageEvent<string>);
+    es.onmessage?.({ data: JSON.stringify(call('me', 'von mir')) } as MessageEvent<string>);
+
+    window.removeEventListener('koerbchen:toast', listener);
+    expect(toasts).toEqual([
+      { kind: 'ruf', text: 'Fläschchen bitte', emoji: null, from: 'Mia' },
+    ]);
+  });
 });

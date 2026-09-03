@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { CalendarEventDto, CalendarEventInput, Recurrence, Role } from '@koerbchen/shared';
 import { api, ApiError } from '../../lib/api';
+import { qk } from '../../lib/queryKeys';
 import { toDateInput, toTimeInput, combineDateTime } from './dateUtils';
 
 interface Member {
@@ -73,7 +74,7 @@ export function EventForm({
         : api.createEvent(koerbchenId, input);
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['calendar', koerbchenId] });
+      qc.invalidateQueries({ queryKey: qk.calendarAll(koerbchenId) });
       onDone();
     },
   });
@@ -94,8 +95,7 @@ export function EventForm({
 
   return (
     <form onSubmit={onSubmit} className="panel p-5 space-y-3">
-      <p className="eyebrow">// {existing ? 'TERMIN · EDIT' : 'TERMIN · NEU'}</p>
-      <h3 className="font-semibold text-rose-800">{existing ? 'Termin bearbeiten' : 'Neuer Termin'}</h3>
+      <h3 className="tin-sublabel">{existing ? 'Termin bearbeiten' : 'Neuer Termin'}</h3>
 
       <input
         className={inputCls}
@@ -128,19 +128,21 @@ export function EventForm({
         )}
       </div>
 
-      <label className="flex items-center gap-2 text-sm text-rose-900/80">
+      <label className="flex min-h-11 items-center gap-2.5 text-sm text-[color:var(--ink)]">
         <input type="checkbox" checked={allDay} onChange={(e) => setAllDay(e.target.checked)} />
         Ganztägig
       </label>
 
       <div>
-        <span className="mb-1 block text-sm font-medium text-rose-900/80">Für wen?</span>
+        <span className="tin-sublabel mb-1.5 block">Für wen?</span>
         <div className="mb-2 grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => setTarget('all')}
-            className={`rounded-xl border-2 py-2 text-sm font-medium ${
-              target === 'all' ? 'border-rose-400 bg-rose-50 text-rose-700' : 'border-rose-200 text-rose-500'
+            className={`min-h-11 rounded-lg py-2 font-serif text-sm font-semibold tracking-[0.08em] uppercase ${
+              target === 'all'
+                ? 'bg-[color:var(--enamel)] text-[color:var(--accent-on)] shadow-[0_0_0_1.5px_var(--rim)]'
+                : 'text-[color:var(--muted)] shadow-[inset_0_0_0_1.5px_var(--rim-soft)]'
             }`}
           >
             Alle
@@ -148,8 +150,10 @@ export function EventForm({
           <button
             type="button"
             onClick={() => setTarget('select')}
-            className={`rounded-xl border-2 py-2 text-sm font-medium ${
-              target === 'select' ? 'border-rose-400 bg-rose-50 text-rose-700' : 'border-rose-200 text-rose-500'
+            className={`min-h-11 rounded-lg py-2 font-serif text-sm font-semibold tracking-[0.08em] uppercase ${
+              target === 'select'
+                ? 'bg-[color:var(--enamel)] text-[color:var(--accent-on)] shadow-[0_0_0_1.5px_var(--rim)]'
+                : 'text-[color:var(--muted)] shadow-[inset_0_0_0_1.5px_var(--rim-soft)]'
             }`}
           >
             Auswählen
@@ -162,11 +166,8 @@ export function EventForm({
                 key={m.userId}
                 type="button"
                 onClick={() => toggleMember(m.userId)}
-                className={`rounded-full px-3 py-1.5 text-sm ${
-                  selected.includes(m.userId)
-                    ? 'bg-rose-500 text-[#0a0713]'
-                    : 'bg-rose-100 text-rose-700'
-                }`}
+                aria-pressed={selected.includes(m.userId)}
+                className="chip min-h-11 px-3.5 py-1.5 text-sm"
               >
                 {m.displayName}
               </button>
@@ -176,7 +177,7 @@ export function EventForm({
       </div>
 
       <div className="flex gap-2">
-        <label className="flex-1 text-sm text-rose-900/80">
+        <label className="flex-1 text-sm text-[color:var(--muted)]">
           Wiederholung
           <select
             className={inputCls}
@@ -190,7 +191,7 @@ export function EventForm({
           </select>
         </label>
         {recurrence !== 'none' && (
-          <label className="flex-1 text-sm text-rose-900/80">
+          <label className="flex-1 text-sm text-[color:var(--muted)]">
             endet am (optional)
             <input
               type="date"
@@ -202,7 +203,7 @@ export function EventForm({
         )}
       </div>
 
-      <label className="block text-sm text-rose-900/80">
+      <label className="block text-sm text-[color:var(--muted)]">
         Erinnerung
         <select className={inputCls} value={reminder} onChange={(e) => setReminder(e.target.value)}>
           {REMINDER_OPTIONS.map((o) => (
@@ -221,20 +222,16 @@ export function EventForm({
         rows={2}
       />
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
+      {error && <p className="text-sm text-[color:var(--oxblood-ink)]">{error}</p>}
 
       <div className="flex gap-2">
-        <button
-          type="submit"
-          disabled={mutation.isPending}
-          className="btn-neon flex-1 rounded-full bg-rose-500 py-2.5 font-semibold text-[#0a0713] transition hover:bg-rose-600 disabled:opacity-60"
-        >
+        <button type="submit" disabled={mutation.isPending} className="btn3d flex-1 py-2.5">
           {mutation.isPending ? '…' : 'Speichern'}
         </button>
         <button
           type="button"
           onClick={onDone}
-          className="rounded-full px-4 py-2.5 font-medium text-rose-600 hover:bg-rose-50"
+          className="btn3d-soft min-h-11 rounded-full px-4 py-2.5 text-sm uppercase"
         >
           Abbrechen
         </button>

@@ -42,6 +42,26 @@ function parseDate(value: string, field: string): Date {
   return d;
 }
 
+type EventInput = z.infer<typeof eventInputSchema>;
+
+// Parses the three date fields together so an event can never be stored with an
+// end before its start (which would yield occurrences of negative duration) or
+// with a series that ends before it begins.
+function parseEventDates(input: EventInput) {
+  const startAt = parseDate(input.startAt, 'startAt');
+  const endAt = input.endAt ? parseDate(input.endAt, 'endAt') : null;
+  if (endAt && endAt.getTime() < startAt.getTime()) {
+    throw badRequest('Das Ende darf nicht vor dem Beginn liegen');
+  }
+  const recurrenceEnd = input.recurrenceEnd
+    ? parseDate(input.recurrenceEnd, 'recurrenceEnd')
+    : null;
+  if (recurrenceEnd && recurrenceEnd.getTime() < startAt.getTime()) {
+    throw badRequest('Das Ende der Wiederholung darf nicht vor dem Beginn liegen');
+  }
+  return { startAt, endAt, recurrenceEnd };
+}
+
 function startOfDay(now = new Date()): Date {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate());
 }
@@ -136,6 +156,7 @@ export async function calendarRoutes(app: FastifyInstance) {
       throw badRequest('Bitte „Alle" wählen oder mindestens einen Teilnehmer angeben');
     }
     if (!forEveryone) await validateAttendees(id, attendeeUserIds);
+    const dates = parseEventDates(input);
 
     const created = (await prisma.calendarEvent.create({
       data: {
@@ -143,12 +164,10 @@ export async function calendarRoutes(app: FastifyInstance) {
         createdBy: user.id,
         title: input.title,
         note: input.note ?? null,
-        startAt: parseDate(input.startAt, 'startAt'),
-        endAt: input.endAt ? parseDate(input.endAt, 'endAt') : null,
+        ...dates,
         allDay: input.allDay ?? false,
         forEveryone,
         recurrence: input.recurrence ?? 'none',
-        recurrenceEnd: input.recurrenceEnd ? parseDate(input.recurrenceEnd, 'recurrenceEnd') : null,
         reminderMinutes: input.reminderMinutes ?? null,
         attendees: forEveryone
           ? undefined
@@ -184,26 +203,29 @@ export async function calendarRoutes(app: FastifyInstance) {
       throw badRequest('Bitte „Alle" wählen oder mindestens einen Teilnehmer angeben');
     }
     if (!forEveryone) await validateAttendees(id, attendeeUserIds);
+    const dates = parseEventDates(input);
 
-    await prisma.calendarAttendee.deleteMany({ where: { eventId } });
-    const updated = (await prisma.calendarEvent.update({
-      where: { id: eventId },
-      data: {
-        title: input.title,
-        note: input.note ?? null,
-        startAt: parseDate(input.startAt, 'startAt'),
-        endAt: input.endAt ? parseDate(input.endAt, 'endAt') : null,
-        allDay: input.allDay ?? false,
-        forEveryone,
-        recurrence: input.recurrence ?? 'none',
-        recurrenceEnd: input.recurrenceEnd ? parseDate(input.recurrenceEnd, 'recurrenceEnd') : null,
-        reminderMinutes: input.reminderMinutes ?? null,
-        reminderSentFor: null,
-        attendees: forEveryone
-          ? undefined
-          : { create: attendeeUserIds.map((userId) => ({ userId })) },
-      },
-      include: { attendees: true },
+    // Replacing the attendee list and updating the event must both land, or the
+    // event would be left with its old attendees dropped.
+    const updated = (await prisma.$transaction(async (tx) => {
+      await tx.calendarAttendee.deleteMany({ where: { eventId } });
+      return tx.calendarEvent.update({
+        where: { id: eventId },
+        data: {
+          title: input.title,
+          note: input.note ?? null,
+          ...dates,
+          allDay: input.allDay ?? false,
+          forEveryone,
+          recurrence: input.recurrence ?? 'none',
+          reminderMinutes: input.reminderMinutes ?? null,
+          reminderSentFor: null,
+          attendees: forEveryone
+            ? undefined
+            : { create: attendeeUserIds.map((userId) => ({ userId })) },
+        },
+        include: { attendees: true },
+      });
     })) as EventWithAttendees;
 
     emitLiveEvent({

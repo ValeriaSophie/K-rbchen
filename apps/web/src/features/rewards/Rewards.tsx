@@ -3,6 +3,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { KoerbchenDto, RedemptionStatus } from '@koerbchen/shared';
 import { api } from '../../lib/api';
 import { qk } from '../../lib/queryKeys';
+import { ErrorNote } from '../../lib/ErrorNote';
+import { ListNote } from '../../lib/LoadState';
+import { IconStar } from '../../lib/icons';
 
 export function useRewards(id: string) {
   return useQuery({ queryKey: qk.rewards(id), queryFn: () => api.listRewards(id) });
@@ -19,11 +22,53 @@ const STATUS_LABEL: Record<RedemptionStatus, string> = {
   approved: 'genehmigt',
   denied: 'abgelehnt',
 };
+// Three states, one firing. A decision that has landed is a bone stamp; one
+// that was refused is the oxblood plate; one still waiting is the bare rim.
+// These used to be mint / gold / red pills, which lit three extra hues on an
+// already-open tin.
 const STATUS_STYLE: Record<RedemptionStatus, string> = {
-  requested: 'bg-amber-100 text-amber-700',
-  approved: 'bg-green-100 text-green-700',
-  denied: 'bg-red-100 text-red-600',
+  requested: 'badge',
+  approved: 'badge badge-done',
+  denied: 'badge badge-low',
 };
+
+// Earned stars as fired ochre discs seated in the tin, each with its own rim,
+// and the empty compartments they will sit in. Level, not tilted — a tin's
+// contents are placed, not stuck on.
+function StarChart({ count }: { count: number }) {
+  const filled = Math.min(count, 12);
+  const empty = count === 0 ? 5 : Math.min(4, Math.max(0, 12 - filled));
+  return (
+    <div className="mt-3 flex flex-wrap items-center gap-1.5" aria-label={`${count} Sterne gesammelt`}>
+      {Array.from({ length: filled }).map((_, i) => (
+        <span key={`f${i}`} className="star-sticker" aria-hidden>
+          <IconStar filled className="h-3.5 w-3.5" />
+        </span>
+      ))}
+      {Array.from({ length: empty }).map((_, i) => (
+        <span key={`e${i}`} className="star-empty" aria-hidden>
+          <IconStar className="h-3.5 w-3.5" />
+        </span>
+      ))}
+      {count > 12 && (
+        <span className="pl-1 font-serif text-sm font-bold tracking-wide text-[color:var(--accent-ink)] tabular-nums">
+          +{count - 12}
+        </span>
+      )}
+      {count === 0 && <span className="pl-1 text-sm text-[color:var(--muted)]">Noch keine – sammle welche!</span>}
+    </div>
+  );
+}
+
+// Star "currency" marker — a small gold star followed by a count.
+function StarCost({ n }: { n: number }) {
+  return (
+    <span className="inline-flex items-center gap-1 align-middle">
+      <IconStar filled className="h-3.5 w-3.5 text-[color:var(--star)]" />
+      {n}
+    </span>
+  );
+}
 
 // Pupp view: star balance, redeemable rewards, own redemption requests.
 export function StarsCard({ koerbchenId, userId }: { koerbchenId: string; userId: string }) {
@@ -40,49 +85,60 @@ export function StarsCard({ koerbchenId, userId }: { koerbchenId: string; userId
 
   return (
     <section className="panel p-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-rose-800">Meine Sterne</h2>
-        <span className="text-2xl font-bold text-amber-500">⭐ {balance}</span>
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="tin-label">Meine Sterne</h2>
+        <span
+          className="wordmark text-4xl leading-none tabular-nums"
+          style={{ color: 'var(--accent)' }}
+        >
+          {balance}
+        </span>
       </div>
+      <StarChart count={balance} />
 
-      <ul className="mt-4 space-y-2">
+      <ul className="compartments mt-5 border-t-[1.5px] border-[color:var(--rim-soft)]">
         {(rewards.data ?? [])
           .filter((r) => r.active)
           .map((r) => (
-            <li
-              key={r.id}
-              className="flex items-center justify-between rounded-2xl bg-rose-50 px-4 py-3"
-            >
-              <div>
-                <p className="font-medium text-rose-800">{r.title}</p>
-                {r.description && <p className="text-xs text-rose-900/50">{r.description}</p>}
+            <li key={r.id} className="compartment flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-serif font-bold tracking-wide text-[color:var(--ink)]">
+                  {r.title}
+                </p>
+                {r.description && <p className="text-xs text-[color:var(--muted)]">{r.description}</p>}
               </div>
               <button
                 onClick={() => redeem.mutate(r.id)}
                 disabled={balance < r.costStars || redeem.isPending}
-                className="rounded-full bg-rose-500 px-3 py-1.5 text-sm font-semibold text-[#0a0713] transition hover:bg-rose-600 disabled:opacity-40"
+                className="btn3d px-4 py-2 text-sm"
               >
-                ⭐ {r.costStars}
+                <StarCost n={r.costStars} />
               </button>
             </li>
           ))}
-        {rewards.data?.length === 0 && (
-          <li className="text-sm text-rose-900/40">Noch keine Belohnungen.</li>
+        {(rewards.data?.length === 0 || rewards.isError) && (
+          <li>
+            <ListNote
+              isError={rewards.isError}
+              error={rewards.error}
+              onRetry={() => void rewards.refetch()}
+              empty="Noch keine Belohnungen."
+            />
+          </li>
         )}
       </ul>
+      <ErrorNote error={redeem.error} />
 
       {(redemptions.data ?? []).length > 0 && (
-        <div className="mt-5">
-          <h3 className="text-sm font-medium text-rose-900/70">Meine Anfragen</h3>
-          <ul className="mt-2 space-y-1">
+        <div className="mt-6">
+          <h3 className="tin-sublabel">Meine Anfragen</h3>
+          <ul className="compartments mt-2.5 border-t-[1.5px] border-[color:var(--rim-soft)]">
             {redemptions.data!.map((r) => (
-              <li key={r.id} className="flex items-center justify-between text-sm">
-                <span className="text-rose-800">
-                  {r.rewardTitle} · ⭐ {r.costStars}
+              <li key={r.id} className="compartment flex items-center justify-between gap-3 text-sm">
+                <span className="text-[color:var(--ink)]">
+                  {r.rewardTitle} · <StarCost n={r.costStars} />
                 </span>
-                <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${STATUS_STYLE[r.status]}`}>
-                  {STATUS_LABEL[r.status]}
-                </span>
+                <span className={STATUS_STYLE[r.status]}>{STATUS_LABEL[r.status]}</span>
               </li>
             ))}
           </ul>
@@ -118,13 +174,13 @@ export function RewardsAdmin({ koerbchen }: { koerbchen: KoerbchenDto }) {
       api.decideRedemption(koerbchenId, v.id, v.approve),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: qk.redemptions(koerbchenId) });
-      qc.invalidateQueries({ queryKey: ['stars', koerbchenId] });
+      qc.invalidateQueries({ queryKey: qk.starsAll(koerbchenId) });
     },
   });
   const grant = useMutation({
     mutationFn: (v: { userId: string; delta: number }) =>
       api.grantStars(koerbchenId, v.userId, v.delta),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['stars', koerbchenId] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: qk.starsAll(koerbchenId) }),
   });
 
   const pupps = koerbchen.members.filter((m) => m.role === 'pupp');
@@ -137,29 +193,30 @@ export function RewardsAdmin({ koerbchen }: { koerbchen: KoerbchenDto }) {
 
   return (
     <section className="panel p-6">
-      <h2 className="text-lg font-semibold text-rose-800">Belohnungen & Sterne</h2>
+      <h2 className="tin-label">Belohnungen &amp; Sterne</h2>
+      <ErrorNote error={decide.error ?? grant.error ?? create.error ?? remove.error} />
 
       {pending.length > 0 && (
-        <div className="mt-4 rounded-2xl bg-amber-50 p-4">
-          <h3 className="text-sm font-semibold text-amber-700">Offene Anfragen</h3>
-          <ul className="mt-2 space-y-2">
+        <div className="mt-5">
+          <h3 className="tin-sublabel">Offene Anfragen</h3>
+          <ul className="compartments mt-2.5 border-t-[1.5px] border-[color:var(--rim-soft)]">
             {pending.map((r) => (
-              <li key={r.id} className="flex items-center justify-between text-sm">
-                <span className="text-rose-800">
-                  {r.rewardTitle} · ⭐ {r.costStars}
+              <li key={r.id} className="compartment flex items-center justify-between gap-3 text-sm">
+                <span className="text-[color:var(--ink)]">
+                  {r.rewardTitle} · <StarCost n={r.costStars} />
                 </span>
-                <span className="flex gap-1">
+                <span className="flex shrink-0 gap-2">
                   <button
                     onClick={() => decide.mutate({ id: r.id, approve: true })}
-                    className="rounded-full bg-green-500 px-3 py-1 text-xs font-semibold text-[#0a0713] hover:bg-green-600"
+                    className="btn3d min-h-9 px-3.5 py-1.5 text-xs"
                   >
-                    OK
+                    Genehmigen
                   </button>
                   <button
                     onClick={() => decide.mutate({ id: r.id, approve: false })}
-                    className="rounded-full bg-rose-200 px-3 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-300"
+                    className="btn3d-soft min-h-9 px-3.5 py-1.5 text-xs"
                   >
-                    Nein
+                    Ablehnen
                   </button>
                 </span>
               </li>
@@ -169,20 +226,23 @@ export function RewardsAdmin({ koerbchen }: { koerbchen: KoerbchenDto }) {
       )}
 
       {pupps.length > 0 && (
-        <div className="mt-4">
-          <h3 className="text-sm font-medium text-rose-900/70">Sterne vergeben</h3>
-          <ul className="mt-2 space-y-1">
+        <div className="mt-6">
+          <h3 className="tin-sublabel">Sterne vergeben</h3>
+          <ul className="compartments mt-2.5 border-t-[1.5px] border-[color:var(--rim-soft)]">
             {pupps.map((p) => (
-              <li key={p.userId} className="flex items-center justify-between text-sm">
-                <span className="text-rose-800">{p.displayName}</span>
-                <span className="flex gap-1">
+              <li key={p.userId} className="compartment flex items-center justify-between gap-3 text-sm">
+                <span className="font-serif font-bold tracking-wide text-[color:var(--ink)]">
+                  {p.displayName}
+                </span>
+                <span className="flex shrink-0 gap-2">
                   {[1, 5].map((n) => (
                     <button
                       key={n}
                       onClick={() => grant.mutate({ userId: p.userId, delta: n })}
-                      className="rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700 hover:bg-amber-200"
+                      className="btn3d-soft min-h-9 px-3.5 py-1.5 text-xs"
                     >
-                      +{n}⭐
+                      +{n}
+                      <IconStar filled className="ml-0.5 inline-block h-3 w-3 align-[-1px]" />
                     </button>
                   ))}
                 </span>
@@ -207,25 +267,23 @@ export function RewardsAdmin({ koerbchen }: { koerbchen: KoerbchenDto }) {
           onChange={(e) => setCost(Number(e.target.value))}
           className="field w-20"
         />
-        <button
-          type="submit"
-          disabled={create.isPending}
-          className="rounded-xl bg-rose-500 px-4 text-sm font-semibold text-[#0a0713] hover:bg-rose-600 disabled:opacity-60"
-        >
+        <button type="submit" disabled={create.isPending} className="btn3d px-5 text-lg">
           +
         </button>
       </form>
 
-      <ul className="mt-3 space-y-1">
+      <ul className="compartments mt-4 border-t-[1.5px] border-[color:var(--rim-soft)]">
         {(rewards.data ?? []).map((r) => (
-          <li key={r.id} className="flex items-center justify-between text-sm">
-            <span className={r.active ? 'text-rose-800' : 'text-rose-900/30 line-through'}>
-              {r.title} · ⭐ {r.costStars}
+          <li key={r.id} className="compartment flex items-center justify-between gap-3 text-sm">
+            <span
+              className={r.active ? 'text-[color:var(--ink)]' : 'text-[color:var(--muted)] line-through'}
+            >
+              {r.title} · <StarCost n={r.costStars} />
             </span>
             {r.active && (
               <button
                 onClick={() => remove.mutate(r.id)}
-                className="text-xs text-rose-400 hover:text-rose-600"
+                className="ghost -mr-1.5 shrink-0 hover:text-[color:var(--oxblood-ink)]"
               >
                 entfernen
               </button>

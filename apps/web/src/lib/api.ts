@@ -4,8 +4,15 @@ import type {
   DrinkTodayDto,
   KoerbchenSettingsInput,
   Role,
-  DiaperStatusDto,
+  DiaperTypeDto,
+  DiaperTypeInput,
   ChangeStatusDto,
+  BagDto,
+  BagItemDto,
+  BagInput,
+  BagItemInput,
+  PlushieDto,
+  PlushieInput,
   RewardDto,
   RewardInput,
   StarBalanceDto,
@@ -28,9 +35,18 @@ export class ApiError extends Error {
 }
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  // Only declare a JSON body when there actually is one. Fastify rejects a
+  // request that announces `Content-Type: application/json` and then sends
+  // nothing — "Body cannot be empty when content-type is set to
+  // 'application/json'" — which is a 400 on every bodiless mutation: logout,
+  // acknowledging a Ruf, redeeming a reward, resetting a bag, and every delete.
+  const hasBody = options?.body !== undefined && options?.body !== null;
   const res = await fetch(path, {
     ...options,
-    headers: { 'Content-Type': 'application/json', ...(options?.headers ?? {}) },
+    headers: {
+      ...(hasBody ? { 'Content-Type': 'application/json' } : {}),
+      ...(options?.headers ?? {}),
+    },
     credentials: 'same-origin',
   });
   if (!res.ok) {
@@ -74,19 +90,77 @@ export const api = {
       `/api/koerbchen/${id}/drink/today${userId ? `?userId=${encodeURIComponent(userId)}` : ''}`,
     ),
 
-  // Diapers & changes
-  diaperStatus: (id: string) => request<DiaperStatusDto>(`/api/koerbchen/${id}/diaper`),
-  restockDiaper: (id: string, count: number) =>
-    request<DiaperStatusDto>(`/api/koerbchen/${id}/diaper/restock`, {
+  // Diapers: configurable types, each with its own stock
+  listDiaperTypes: (id: string) => request<DiaperTypeDto[]>(`/api/koerbchen/${id}/diaper`),
+  createDiaperType: (id: string, input: DiaperTypeInput) =>
+    request<DiaperTypeDto>(`/api/koerbchen/${id}/diaper/types`, {
+      method: 'POST',
+      body: body(input),
+    }),
+  updateDiaperType: (
+    id: string,
+    typeId: string,
+    input: Partial<DiaperTypeInput> & { active?: boolean },
+  ) =>
+    request<DiaperTypeDto>(`/api/koerbchen/${id}/diaper/types/${typeId}`, {
+      method: 'PATCH',
+      body: body(input),
+    }),
+  deleteDiaperType: (id: string, typeId: string) =>
+    request<{ ok: boolean }>(`/api/koerbchen/${id}/diaper/types/${typeId}`, { method: 'DELETE' }),
+  restockDiaperType: (id: string, typeId: string, count: number) =>
+    request<DiaperTypeDto>(`/api/koerbchen/${id}/diaper/types/${typeId}/restock`, {
       method: 'POST',
       body: body({ count }),
     }),
+
+  // Changes
   changeStatus: (id: string) => request<ChangeStatusDto>(`/api/koerbchen/${id}/change`),
-  logChange: (id: string, note?: string) =>
-    request<{ change: ChangeStatusDto; diaper: DiaperStatusDto }>(`/api/koerbchen/${id}/change`, {
+  logChange: (id: string, input?: { diaperTypeId?: string; note?: string }) =>
+    request<{ change: ChangeStatusDto; diaper: DiaperTypeDto[] }>(`/api/koerbchen/${id}/change`, {
       method: 'POST',
-      body: body({ note }),
+      body: body(input ?? {}),
     }),
+
+  // Bags & packing lists
+  listBags: (id: string) => request<BagDto[]>(`/api/koerbchen/${id}/bags`),
+  createBag: (id: string, input: BagInput) =>
+    request<BagDto>(`/api/koerbchen/${id}/bags`, { method: 'POST', body: body(input) }),
+  updateBag: (id: string, bagId: string, input: Partial<BagInput>) =>
+    request<BagDto>(`/api/koerbchen/${id}/bags/${bagId}`, { method: 'PATCH', body: body(input) }),
+  deleteBag: (id: string, bagId: string) =>
+    request<{ ok: boolean }>(`/api/koerbchen/${id}/bags/${bagId}`, { method: 'DELETE' }),
+  addBagItem: (id: string, bagId: string, input: BagItemInput) =>
+    request<BagItemDto>(`/api/koerbchen/${id}/bags/${bagId}/items`, {
+      method: 'POST',
+      body: body(input),
+    }),
+  updateBagItem: (
+    id: string,
+    bagId: string,
+    itemId: string,
+    input: Partial<BagItemInput> & { packed?: boolean },
+  ) =>
+    request<BagDto>(`/api/koerbchen/${id}/bags/${bagId}/items/${itemId}`, {
+      method: 'PATCH',
+      body: body(input),
+    }),
+  deleteBagItem: (id: string, bagId: string, itemId: string) =>
+    request<BagDto>(`/api/koerbchen/${id}/bags/${bagId}/items/${itemId}`, { method: 'DELETE' }),
+  resetBag: (id: string, bagId: string) =>
+    request<BagDto>(`/api/koerbchen/${id}/bags/${bagId}/reset`, { method: 'POST' }),
+
+  // Plushies (Steckbriefe)
+  listPlushies: (id: string) => request<PlushieDto[]>(`/api/koerbchen/${id}/plushies`),
+  createPlushie: (id: string, input: PlushieInput) =>
+    request<PlushieDto>(`/api/koerbchen/${id}/plushies`, { method: 'POST', body: body(input) }),
+  updatePlushie: (id: string, plushieId: string, input: Partial<PlushieInput>) =>
+    request<PlushieDto>(`/api/koerbchen/${id}/plushies/${plushieId}`, {
+      method: 'PATCH',
+      body: body(input),
+    }),
+  deletePlushie: (id: string, plushieId: string) =>
+    request<{ ok: boolean }>(`/api/koerbchen/${id}/plushies/${plushieId}`, { method: 'DELETE' }),
 
   // Rewards & stars
   listRewards: (id: string) => request<RewardDto[]>(`/api/koerbchen/${id}/rewards`),

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { api, ApiError } from '../../lib/api';
+import { api } from '../../lib/api';
+import { ErrorNote } from '../../lib/ErrorNote';
 import { qk } from '../../lib/queryKeys';
 
 type Mode = 'login' | 'register';
@@ -25,26 +26,17 @@ export function AuthPage() {
     mutation.mutate();
   };
 
-  const error =
-    mutation.error instanceof ApiError
-      ? mutation.error.message
-      : mutation.error
-        ? 'Verbindung fehlgeschlagen'
-        : null;
-
   return (
     <main className="relative flex min-h-dvh items-center justify-center p-6">
       <div className="w-full max-w-sm">
         <div className="mb-7 text-center">
-          <p className="eyebrow mb-3">// CARE&nbsp;TERMINAL — v0.1</p>
-          <h1
-            className="wordmark text-5xl text-rose-500"
-            style={{ animation: 'kb-glitch 7s infinite' }}
+          {/* The wordmark carries its own weight. "CARE JOURNAL" above it was a
+              kicker, and an English one in a German-only app. */}
+          <h1 className="wordmark text-6xl text-[color:var(--ink)]">KÖRBCHEN</h1>
+          <p
+            className="mt-3 text-sm tracking-wide text-[color:var(--muted)]"
           >
-            KÖRBCHEN
-          </h1>
-          <p className="mt-3 font-mono text-xs tracking-widest text-[color:var(--muted)]">
-            FÜRSORGE · LIVE-SYNC · GEBORGENHEIT
+            fürsorge · geteilt · geborgen
           </p>
         </div>
 
@@ -94,12 +86,12 @@ export function AuthPage() {
               required
             />
 
-            {error && <p className="font-mono text-sm text-red-600">! {error}</p>}
+            <ErrorNote error={mutation.error} className="mt-0" />
 
             <button
               type="submit"
               disabled={mutation.isPending}
-              className="btn-neon w-full rounded-full bg-rose-500 py-3 font-semibold uppercase tracking-wider text-[#0a0713] transition hover:bg-rose-600 disabled:opacity-60"
+              className="btn3d w-full rounded-full py-3 uppercase tracking-wider"
             >
               {mutation.isPending
                 ? '···'

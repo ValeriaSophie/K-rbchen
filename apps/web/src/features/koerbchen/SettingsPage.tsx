@@ -1,11 +1,13 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { KoerbchenDto } from '@koerbchen/shared';
-import { api, ApiError } from '../../lib/api';
+import { api } from '../../lib/api';
 import { qk } from '../../lib/queryKeys';
+import { ErrorNote } from '../../lib/ErrorNote';
+import { IconCheck } from '../../lib/icons';
 
 // Caregiver-only settings: rename the Körbchen and set the daily drink goal.
-export function SettingsPage({ koerbchen, onDone }: { koerbchen: KoerbchenDto; onDone: () => void }) {
+export function SettingsPage({ koerbchen }: { koerbchen: KoerbchenDto }) {
   const qc = useQueryClient();
   const [name, setName] = useState(koerbchen.name);
   const [goal, setGoal] = useState(koerbchen.drinkGoalMl);
@@ -19,7 +21,6 @@ export function SettingsPage({ koerbchen, onDone }: { koerbchen: KoerbchenDto; o
     mutationFn: () => api.updateSettings(koerbchen.id, { name, drinkGoalMl: goal }),
     onSuccess: (k) => {
       qc.setQueryData(qk.koerbchen(k.id), k);
-      onDone();
     },
   });
 
@@ -28,28 +29,29 @@ export function SettingsPage({ koerbchen, onDone }: { koerbchen: KoerbchenDto; o
     mutation.mutate();
   };
 
-  const error =
-    mutation.error instanceof ApiError ? mutation.error.message : mutation.error ? 'Fehler' : null;
+  // The panel stays open after saving, so without this the save has no visible
+  // effect at all. Reset it as soon as the form is edited again.
+  const saved = mutation.isSuccess && !mutation.isPending;
 
   return (
-    <div className="panel p-5">
-      <p className="eyebrow mb-2">// KONFIG</p>
-      <h2 className="text-lg font-semibold text-rose-800">Einstellungen</h2>
+    <section className="panel p-6">
+      <h2 className="tin-label">Einstellungen</h2>
       <form onSubmit={onSubmit} className="mt-4 space-y-4">
         <label className="block">
-          <span className="mb-1 block text-sm font-medium text-rose-900/80">Name</span>
+          <span className="tin-sublabel mb-1.5 block">Name</span>
           <input
             className="field"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              mutation.reset();
+            }}
             required
           />
         </label>
 
         <label className="block">
-          <span className="mb-1 block text-sm font-medium text-rose-900/80">
-            Trinkziel pro Tag (ml)
-          </span>
+          <span className="tin-sublabel mb-1.5 block">Trinkziel pro Tag (ml)</span>
           <input
             type="number"
             min={100}
@@ -57,30 +59,33 @@ export function SettingsPage({ koerbchen, onDone }: { koerbchen: KoerbchenDto; o
             step={50}
             className="field"
             value={goal}
-            onChange={(e) => setGoal(Number(e.target.value))}
+            onChange={(e) => {
+              setGoal(Number(e.target.value));
+              mutation.reset();
+            }}
             required
           />
         </label>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
+        <ErrorNote error={mutation.error} />
 
-        <div className="flex gap-2">
-          <button
-            type="submit"
-            disabled={mutation.isPending}
-            className="btn-neon flex-1 rounded-full bg-rose-500 py-2.5 font-semibold text-[#0a0713] transition hover:bg-rose-600 disabled:opacity-60"
-          >
-            {mutation.isPending ? '…' : 'Speichern'}
-          </button>
-          <button
-            type="button"
-            onClick={onDone}
-            className="rounded-full px-4 py-2.5 font-medium text-rose-600 hover:bg-rose-50"
-          >
-            Abbrechen
-          </button>
-        </div>
+        <button
+          type="submit"
+          disabled={mutation.isPending}
+          className="btn3d w-full rounded-full py-2.5"
+        >
+          {mutation.isPending ? (
+            '…'
+          ) : saved ? (
+            <>
+              Gespeichert
+              <IconCheck className="ml-2 -mt-0.5 inline-block h-3.5 w-3.5" />
+            </>
+          ) : (
+            'Speichern'
+          )}
+        </button>
       </form>
-    </div>
+    </section>
   );
 }

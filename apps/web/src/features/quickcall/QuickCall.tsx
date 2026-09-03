@@ -3,6 +3,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import type { Role } from '@koerbchen/shared';
 import { api } from '../../lib/api';
 import { qk } from '../../lib/queryKeys';
+import { ErrorNote } from '../../lib/ErrorNote';
+import { ListNote } from '../../lib/LoadState';
+import { IconBell, IconCheck, IconTrash, IconPencil } from '../../lib/icons';
 
 export function usePresets(id: string) {
   return useQuery({ queryKey: qk.presets(id), queryFn: () => api.listPresets(id) });
@@ -50,25 +53,40 @@ export function QuickCallPanel({
 
   return (
     <section className="panel p-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-rose-800">Kurzruf 📣</h2>
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="tin-label flex min-w-0 items-center gap-2.5">
+          <span className="card-ic h-9 w-9 shrink-0">
+            <IconBell className="h-5 w-5" />
+          </span>
+          Kurzruf
+        </h2>
         {role === 'caregiver' && (
           <button
             onClick={() => setManage((m) => !m)}
-            className="text-xs text-rose-400 hover:text-rose-600"
+            className="ghost -mr-1.5"
           >
-            {manage ? 'fertig' : 'Presets'}
+            {manage ? (
+              <>
+                <IconCheck className="mr-1.5 h-3.5 w-3.5" />
+                fertig
+              </>
+            ) : (
+              <>
+                <IconPencil className="mr-1.5 h-3.5 w-3.5" />
+                verwalten
+              </>
+            )}
           </button>
         )}
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div className="mt-5 flex flex-wrap gap-2">
         {(presets.data ?? []).map((p) => (
           <span key={p.id} className="flex items-center">
             <button
               onClick={() => send.mutate({ presetId: p.id })}
               disabled={send.isPending}
-              className="rounded-full bg-rose-100 px-3 py-2 text-sm font-medium text-rose-700 transition hover:bg-rose-200 disabled:opacity-60"
+              className="btn3d-soft px-3.5 py-2 text-sm"
             >
               {p.emoji ? `${p.emoji} ` : ''}
               {p.label}
@@ -76,55 +94,61 @@ export function QuickCallPanel({
             {manage && <DeletePreset koerbchenId={koerbchenId} presetId={p.id} />}
           </span>
         ))}
-        {presets.data?.length === 0 && !manage && (
-          <span className="text-sm text-rose-900/40">Noch keine Presets.</span>
+        {(presets.data?.length === 0 || presets.isError) && !manage && (
+          <ListNote
+            isError={presets.isError}
+            error={presets.error}
+            onRetry={() => void presets.refetch()}
+            empty="Noch keine Presets."
+          />
         )}
       </div>
 
       {manage && <PresetForm koerbchenId={koerbchenId} />}
 
-      <form onSubmit={onSendText} className="mt-3 flex gap-2">
+      <form onSubmit={onSendText} className="mt-2 flex gap-2">
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="eigene Nachricht"
+          maxLength={200}
           className="field flex-1"
         />
-        <button
-          type="submit"
-          disabled={send.isPending}
-          className="rounded-2xl bg-rose-500 px-4 text-sm font-semibold text-[#0a0713] hover:bg-rose-600 disabled:opacity-60"
-        >
+        <button type="submit" disabled={send.isPending} className="btn3d px-5 text-sm">
           Senden
         </button>
       </form>
+      <ErrorNote error={send.error ?? ack.error} />
 
-      <ul className="mt-4 space-y-2">
+      <ul className="compartments mt-5 border-t-[1.5px] border-[color:var(--rim-soft)]">
         {(calls.data ?? []).slice(0, 8).map((c) => {
           const mine = c.fromUserId === currentUserId;
           return (
             <li
               key={c.id}
-              className={`flex items-center justify-between rounded-2xl px-4 py-2.5 text-sm ${
-                c.acknowledgedAt ? 'bg-rose-50/60 text-rose-900/50' : 'bg-rose-50 text-rose-800'
+              className={`compartment flex items-start justify-between gap-3 text-sm ${
+                c.acknowledgedAt ? 'text-[color:var(--muted)]' : 'text-[color:var(--ink)]'
               }`}
             >
-              <span>
-                {c.emoji ? `${c.emoji} ` : ''}
-                <span className="font-medium">{c.text}</span>
-                <span className="ml-2 text-xs text-rose-900/40">
+              <span className="min-w-0 flex-1">
+                <span className="font-serif font-bold tracking-wide break-words">
+                  {c.emoji ? `${c.emoji} ` : ''}
+                  {c.text}
+                </span>
+                {/* Who and when is metadata about the message, not part of it.
+                    Its own line, so a long Ruf never wraps around it. */}
+                <span className="mt-0.5 block text-xs text-[color:var(--muted)]">
                   {c.fromDisplayName} · {formatTime(c.createdAt)}
                 </span>
               </span>
               {!c.acknowledgedAt && !mine && (
-                <button
-                  onClick={() => ack.mutate(c.id)}
-                  className="rounded-full bg-rose-500 px-3 py-1 text-xs font-semibold text-[#0a0713] hover:bg-rose-600"
-                >
-                  ✓
+                <button onClick={() => ack.mutate(c.id)} aria-label="Gesehen" className="ack h-11 w-11 shrink-0">
+                  <IconCheck className="h-4 w-4" />
                 </button>
               )}
-              {c.acknowledgedAt && <span className="text-xs">gesehen</span>}
+              {c.acknowledgedAt && (
+                <span className="badge badge-done shrink-0 self-center">gesehen</span>
+              )}
             </li>
           );
         })}
@@ -142,10 +166,10 @@ function DeletePreset({ koerbchenId, presetId }: { koerbchenId: string; presetId
   return (
     <button
       onClick={() => del.mutate()}
-      className="ml-1 text-rose-300 hover:text-rose-600"
+      className="ml-1 grid h-9 w-9 shrink-0 place-items-center rounded-lg text-[color:var(--muted)] transition hover:text-[color:var(--oxblood-ink)]"
       aria-label="Preset entfernen"
     >
-      ×
+      <IconTrash className="h-4 w-4" />
     </button>
   );
 }
@@ -191,11 +215,7 @@ function PresetForm({ koerbchenId }: { koerbchenId: string }) {
         placeholder="Nachricht"
         className="field flex-1"
       />
-      <button
-        type="submit"
-        disabled={create.isPending}
-        className="rounded-xl bg-rose-500 px-3 text-sm font-semibold text-[#0a0713] hover:bg-rose-600 disabled:opacity-60"
-      >
+      <button type="submit" disabled={create.isPending} className="btn3d px-4 text-lg">
         +
       </button>
     </form>
